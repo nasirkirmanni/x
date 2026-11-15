@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "ai-creator-management.vercel.app" }],
+      "destination": "https://tech-fintech-creators.vercel.app/:path*",
+      "permanent": true
+    }
+  ]
+}

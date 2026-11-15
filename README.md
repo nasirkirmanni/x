@@ -4,11 +4,13 @@ A single-page static site. No build step and no dependencies: plain HTML, CSS an
 
 ## Live site
 
-https://ai-creator-management.vercel.app
+https://tech-fintech-creators.vercel.app
 
-It is hosted on Vercel, in the project `ai-creator-management`. The GitHub repo is connected to that project, so every push to `main` redeploys the site. To deploy by hand from this folder, run `vercel deploy --prod`.
+It is hosted on Vercel, in the project `tech-fintech-creators`. The GitHub repo is connected to that project, so every push to `main` redeploys the site. To deploy by hand from this folder, run `vercel deploy --prod`.
 
 The address is a placeholder. Rename the project in Vercel, or add your own domain there, once the agency has a name.
+
+The first address, `ai-creator-management.vercel.app`, forwards to the current one. That rule is in `vercel.json`.
 
 ## View it locally
 
