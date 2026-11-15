@@ -26,7 +26,7 @@ Double-click `index.html`, or serve the folder with any static server. Fonts loa
 
 ## Set the name
 
-Open `assets/js/site.config.js` and fill in `name`. It then appears in the header, the footer and the browser tab. While it is empty, the header shows the mark and "AI Creator Management".
+Open `assets/js/site.config.js` and fill in `name`. It then appears in the header, the footer and the browser tab. While it is empty, the header shows the mark and "Tech & Fintech Creators".
 
 The text used when the site is shared on social media is in the `<head>` of `index.html` (`og:title`, `og:description`). Update it by hand once the name is final.
 

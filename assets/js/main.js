@@ -1,5 +1,5 @@
 /* ==========================================================================
-   AI Creator Management — interactions
+   Tech & fintech creator management — interactions
    No dependencies. Without JavaScript the page is a complete static document.
    ========================================================================== */
 (() => {
@@ -263,7 +263,7 @@
       const wide = w >= 900 || (w >= 600 && free < 200);
       hero.classList.toggle('hero--side', wide);
       cx = w * (wide ? (w >= 900 ? 0.7 : 0.8) : 0.5);
-      cy = wide ? h * (w >= 900 ? 0.44 : 0.42) : navH + Math.max(free, 120) * 0.56;
+      cy = wide ? h * (w >= 900 ? 0.44 : 0.42) : navH + Math.max(22, free * 0.56);
       const theta = (wide ? 47 : 57) * Math.PI / 180;  // arm angle from horizontal
       A = Math.cos(theta) * Math.SQRT2;
       B = Math.sin(theta) * Math.SQRT2;

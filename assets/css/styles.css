@@ -1,5 +1,5 @@
 /* ==========================================================================
-   AI Creator Management — site styles
+   Tech & fintech creator management — site styles
    Strictly black. White, silver and grey only. Hairlines, rulers, big type.
    ========================================================================== */
 
@@ -282,6 +282,7 @@ main, .foot { position: relative; z-index: 1; }
 .brand__name { font-size: .9375rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; }
 .brand__name:empty { display: none; }
 .brand__desc { font-family: var(--mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--mute); white-space: nowrap; }
+@media (max-width: 359px) { .brand__desc { font-size: .6875rem; letter-spacing: .05em; } }
 .has-name .brand__desc { display: none; }
 @media (min-width: 1360px) {
   .has-name .brand__desc { display: inline; padding-left: .85rem; border-left: 1px solid var(--line-2); }
@@ -413,7 +414,8 @@ html:not(.js) .burger { display: none; } /* the menu needs JS; without it the pa
 .hero__title { font-size: clamp(2.5rem, 13.2vw, 4.6rem); font-weight: 200; line-height: .93; }
 .hl { display: block; }
 @media (min-width: 768px) {
-  .hero__title { font-size: clamp(4.75rem, 8.6vw, 9.75rem); font-weight: 140; }
+  /* Four lines tall, so the size also respects the screen's height. */
+  .hero__title { font-size: clamp(4.5rem, min(8.6vw, 13.5vh), 9.75rem); font-weight: 140; }
 }
 
 .hero__foot { display: grid; gap: 1.75rem; margin-top: clamp(1.75rem, 3.2vw, 3rem); }
