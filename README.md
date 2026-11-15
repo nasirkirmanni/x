@@ -2,7 +2,15 @@
 
 A single-page static site. No build step and no dependencies: plain HTML, CSS and JavaScript.
 
-## View it
+## Live site
+
+https://ai-creator-management.vercel.app
+
+It is hosted on Vercel, in the project `ai-creator-management`. The GitHub repo is connected to that project, so every push to `main` redeploys the site. To deploy by hand from this folder, run `vercel deploy --prod`.
+
+The address is a placeholder. Rename the project in Vercel, or add your own domain there, once the agency has a name.
+
+## View it locally
 
 Double-click `index.html`, or serve the folder with any static server. Fonts load from Google Fonts, so you need to be online.
 
@@ -36,7 +44,8 @@ Set `formEndpoint` in `site.config.js` to a form service address, for example Fo
 - [ ] A share image (`og:image`) for social previews
 - [ ] The final logo. The current mark is a placeholder; have the final one checked against existing trademarks.
 - [ ] Tested on a real iPhone, an Android phone, Safari and Firefox
-- [ ] Hosting and a domain. Any static host works.
+- [x] Hosting (Vercel, 16 Nov 2026)
+- [ ] Your own domain, added in Vercel
 
 ## What the site does without JavaScript
 
