@@ -256,6 +256,13 @@
       if (n) n.textContent = '(' + two(i + 1) + ')';
     });
     $$('.menu__n').forEach((n, i) => { n.textContent = two(i + 1); });
+
+    // The section was hidden while the page loaded, so the page has only now reached its
+    // full length. A link that points straight at a section is followed again.
+    const hash = window.location.hash.slice(1);
+    const entry = performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null;
+    const target = hash && (!entry || entry.type === 'navigate') ? document.getElementById(hash) : null;
+    if (target) requestAnimationFrame(() => target.scrollIntoView({ behavior: 'instant', block: 'start' }));
   }
 
   /* ---------- Headlines: wrap each word so it can rise into place ---------- */
