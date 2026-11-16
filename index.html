@@ -172,9 +172,37 @@
           <span class="tag">02</span><span class="tag tag--on">Talent</span><span class="sec-head__rule"></span>
         </header>
 
-        <div class="split-head">
-          <h2 class="display h2" data-split data-reveal>Who we <em>represent</em></h2>
-          <p class="lead" data-reveal style="--d:120ms">We work with a small number of people whose ideas move technology and finance. Follower counts don't decide it. Who is listening does.</p>
+        <div class="split-head talent__head">
+          <div class="talent__intro">
+            <h2 class="display h2" data-split data-reveal>Who we <em>represent</em></h2>
+            <p class="lead" data-reveal style="--d:120ms">We work with a small number of people whose ideas move technology and finance. Follower counts don't decide it. Who is listening does.</p>
+          </div>
+
+          <!-- The three kinds of people we represent, as the corners of one triangle that meet
+               at the X in the middle. Hovering a row below lights its corner. -->
+          <figure class="tri" data-tri data-reveal style="--d:160ms" aria-hidden="true">
+            <svg viewBox="0 0 440 340" fill="none" stroke="currentColor" stroke-width=".9" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path class="draw" pathLength="1" style="--k:0" d="M220 66L90.1 291L349.9 291Z"/>
+              <path class="draw" pathLength="1" style="--k:1" stroke-opacity=".55" d="M220 102L121.27 273L318.73 273Z"/>
+              <path class="draw" pathLength="1" style="--k:2" stroke-opacity=".38" d="M220 138L152.45 255L287.55 255Z"/>
+              <path class="draw" pathLength="1" style="--k:3" stroke-opacity=".25" d="M220 171L181.03 238.5L258.97 238.5Z"/>
+              <path class="tri__ripple" d="M220 171L181.03 238.5L258.97 238.5Z"/>
+              <path class="tri__arm draw" data-v="0" pathLength="1" style="--k:4" d="M220 66L220 196"/>
+              <path class="tri__arm draw" data-v="1" pathLength="1" style="--k:5" d="M90.1 291L202.68 226"/>
+              <path class="tri__arm draw" data-v="2" pathLength="1" style="--k:6" d="M349.9 291L237.32 226"/>
+              <circle class="tri__node" data-v="0" cx="220" cy="66" r="5"/>
+              <circle class="tri__node" data-v="1" cx="90.1" cy="291" r="5"/>
+              <circle class="tri__node" data-v="2" cx="349.9" cy="291" r="5"/>
+              <circle class="tri__core" cx="220" cy="216" r="20"/>
+              <use class="tri__mark" href="#mark" x="209" y="205" width="22" height="22"/>
+              <text class="tri__label" data-v="0" x="220" y="46" text-anchor="middle">Technology</text>
+              <text class="tri__label" data-v="1" x="90.1" y="322" text-anchor="middle">Fintech</text>
+              <text class="tri__label" data-v="2" x="349.9" y="322" text-anchor="middle">Founders</text>
+              <circle class="tri__dot" r="2" fill="currentColor" stroke="none"><animateMotion dur="2.4s" begin="0s" repeatCount="indefinite" path="M220 66L220 196"/></circle>
+              <circle class="tri__dot" r="2" fill="currentColor" stroke="none"><animateMotion dur="2.4s" begin="0.8s" repeatCount="indefinite" path="M90.1 291L202.68 226"/></circle>
+              <circle class="tri__dot" r="2" fill="currentColor" stroke="none"><animateMotion dur="2.4s" begin="1.6s" repeatCount="indefinite" path="M349.9 291L237.32 226"/></circle>
+            </svg>
+          </figure>
         </div>
 
         <!-- An index of the three kinds of people we represent: one row each, the name set

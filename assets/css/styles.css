@@ -606,6 +606,35 @@ a.card:focus-visible .card__media img { filter: grayscale(1) contrast(1.06) brig
   .roster__row:hover::after { transform: none; }
 }
 
+/* The triangle beside the heading: the three kinds of people we represent as its corners,
+   nested triangles closing in on the X in the middle, signals travelling inward and a slow
+   ripple outward. It draws itself in when it scrolls into view. Hovering a row in the list
+   lights its corner (tri() in main.js). */
+.talent__head { align-items: center; }
+.talent__intro { display: grid; gap: 1.25rem; justify-items: start; }
+.tri { width: 100%; max-width: 26rem; justify-self: center; color: var(--white); }
+@media (min-width: 1024px) { .tri { justify-self: end; } }
+.tri svg { display: block; width: 100%; height: auto; overflow: visible; }
+.tri__label { font-family: var(--font); font-size: 15px; font-weight: 500; letter-spacing: -.01em; fill: var(--paper); stroke: none; opacity: .75; transition: opacity .5s var(--ease); }
+.tri__arm { stroke-opacity: .4; transition: stroke-opacity .5s var(--ease); }
+.tri__node { fill: var(--black); transition: fill .5s var(--ease); }
+.tri__core { fill: var(--black); }
+.tri__ripple { opacity: 0; vector-effect: non-scaling-stroke; transform-origin: 220px 216px; }
+.tri.in .tri__ripple { animation: tri-ripple 4.5s var(--ease-io) infinite; }
+@keyframes tri-ripple { 0% { transform: scale(1); opacity: .5; } 100% { transform: scale(3.33); opacity: 0; } }
+.tri__dot { opacity: 0; transition: opacity .6s var(--ease) 1.4s; }
+.tri.in .tri__dot { opacity: 1; }
+.js .tri .draw { stroke-dasharray: 1 1; stroke-dashoffset: 1; }
+.js .tri.in .draw { stroke-dashoffset: 0; transition: stroke-dashoffset 1.4s var(--ease) calc(var(--k, 0) * 90ms + .2s), stroke-opacity .5s var(--ease); }
+.tri[data-on] .tri__label { opacity: .35; }
+.tri[data-on="0"] .tri__label[data-v="0"], .tri[data-on="1"] .tri__label[data-v="1"], .tri[data-on="2"] .tri__label[data-v="2"] { opacity: 1; }
+.tri[data-on="0"] .tri__arm[data-v="0"], .tri[data-on="1"] .tri__arm[data-v="1"], .tri[data-on="2"] .tri__arm[data-v="2"] { stroke-opacity: 1; }
+.tri[data-on="0"] .tri__node[data-v="0"], .tri[data-on="1"] .tri__node[data-v="1"], .tri[data-on="2"] .tri__node[data-v="2"] { fill: var(--white); }
+@media (prefers-reduced-motion: reduce) {
+  .tri__ripple, .tri__dot { display: none; }
+  .js .tri .draw { stroke-dashoffset: 0; }
+}
+
 /* What we look for: four short columns divided by hairlines. */
 .criteria { margin-top: clamp(3.5rem, 7vw, 5.5rem); }
 .criteria__label { margin-bottom: 1.25rem; }
@@ -736,19 +765,20 @@ a.card:focus-visible .card__media img { filter: grayscale(1) contrast(1.06) brig
 .flow__stage text { font-family: var(--font); font-size: 11px; font-weight: 500; letter-spacing: 0; fill: var(--mute); stroke: none; }
 
 html:not(.js) .flow__art:not([data-art="3"]) { display: none; }
-.js .flow__art { opacity: 0; transition: opacity .45s var(--ease); }
-.js .flow__art.is-on { opacity: 1; transition-delay: .1s; }
-/* Lines draw in when their step becomes active (and the section has been seen). */
+.js .flow__art { opacity: 0; transition: opacity .3s var(--ease); }
+.js .flow__art.is-on { opacity: 1; transition-delay: .05s; }
+/* Lines draw in quickly when their step becomes active (and the section has been seen),
+   so each drawing is complete well inside its 1.8 seconds. */
 .js .flow__art .draw { stroke-dasharray: 1 1; stroke-dashoffset: 1; }
-.js .flow.is-seen .flow__art.is-on .draw { stroke-dashoffset: 0; transition: stroke-dashoffset 1.2s var(--ease) calc(var(--k, 0) * 70ms + .15s); }
+.js .flow.is-seen .flow__art.is-on .draw { stroke-dashoffset: 0; transition: stroke-dashoffset .7s var(--ease) calc(var(--k, 0) * 35ms + .1s); }
 .js .flow__art .fade { opacity: 0; }
-.js .flow.is-seen .flow__art.is-on .fade { opacity: 1; transition: opacity .8s var(--ease) calc(var(--k, 0) * 70ms + .5s); }
+.js .flow.is-seen .flow__art.is-on .fade { opacity: 1; transition: opacity .5s var(--ease) calc(var(--k, 0) * 35ms + .3s); }
 /* Small signals travel along the lines, and the first node sends out rings. */
-.flow__dot { opacity: 0; transition: opacity .6s var(--ease); }
-.flow.is-seen .flow__art.is-on .flow__dot { opacity: 1; transition-delay: 1.2s; }
+.flow__dot { opacity: 0; transition: opacity .4s var(--ease); }
+.flow.is-seen .flow__art.is-on .flow__dot { opacity: 1; transition-delay: .6s; }
 .flow__ping { opacity: 0; vector-effect: non-scaling-stroke; transform-box: fill-box; transform-origin: center; }
-.flow.is-seen .flow__art.is-on .flow__ping { animation: flow-ping 2.4s var(--ease-io) infinite; }
-.flow.is-seen .flow__art.is-on .flow__ping--late { animation-delay: 1.2s; }
+.flow.is-seen .flow__art.is-on .flow__ping { animation: flow-ping 1.6s var(--ease-io) infinite; }
+.flow.is-seen .flow__art.is-on .flow__ping--late { animation-delay: .8s; }
 @keyframes flow-ping { 0% { transform: scale(1); opacity: .55; } 100% { transform: scale(5); opacity: 0; } }
 .flow__orbit { transform-box: fill-box; transform-origin: center; }
 .flow.is-seen .flow__art.is-on .flow__orbit { animation: xd-turn 20s linear infinite; }

@@ -767,7 +767,7 @@
 
   /* ---------- Process: four steps that take turns ----------
      As soon as any part of the section scrolls into view, the steps start taking turns:
-     1, 2, 3, 4 and round again, a few seconds each. The active step's bar fills, earlier
+     1, 2, 3, 4 and round again, under two seconds each. The active step's bar fills, earlier
      steps keep a full bar, and the card shows the step's drawing. Each time the section
      comes back into view it starts again from step 1. Clicking a step shows it straight
      away and carries on from there. In step 3 the two circles glide together, and keep
@@ -782,7 +782,7 @@
     const ca = $('[data-ca]', box), cb = $('[data-cb]', box);
     const lens = $('[data-lens]', box), lensDot = $('[data-lensdot]', box);
     const N = steps.length;
-    const DUR = 3500;
+    const DUR = 1800;
     let current = 0, timer = 0, raf = 0, visible = false, held = false, stepAt = performance.now();
     const t0 = performance.now();
 
@@ -790,7 +790,7 @@
     const R = 86, FAR = 214, NEAR = 80;
     const agree = (now) => {
       if (!ca || !cb || !lens) return;
-      const t = reduced() ? 1 : current === 2 ? clamp((now - stepAt - 300) / 1700) : 0;
+      const t = reduced() ? 1 : current === 2 ? clamp((now - stepAt - 150) / 900) : 0;
       const e = smooth(t);
       const breath = reduced() ? 0 : Math.sin(((now - t0) / 1000) * 1.4) * 6 * e;
       const d = lerp(FAR, NEAR, e) + breath;
@@ -851,6 +851,19 @@
       if (visible && !was) { box.classList.add('is-seen'); show(0); }   // start from step 1 every time it comes into view
       else if (!visible) { clearTimeout(timer); box.classList.remove('is-running'); }
     }).observe(box);
+  }
+
+  /* ---------- Talent triangle: hovering a row lights its corner ---------- */
+  function tri() {
+    const fig = $('[data-tri]');
+    const list = $('.roster');
+    if (!fig || !list) return;
+    $$('.roster__row', list).forEach((row, k) => {
+      row.addEventListener('pointerenter', () => { fig.dataset.on = String(k); });
+    });
+    list.addEventListener('pointerleave', () => { delete fig.dataset.on; });
+    const svg = $('svg', fig);
+    if (reduced() && svg && svg.pauseAnimations) svg.pauseAnimations();
   }
 
   /* ---------- Beliefs: each line lights up as it reaches the middle of the screen ----------
@@ -1195,6 +1208,7 @@
   xfield();
   xdiagram();
   accordions();
+  tri();
   flow();
   beliefs();
   footWord();
