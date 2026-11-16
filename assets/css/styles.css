@@ -25,7 +25,8 @@
   --gutter: clamp(1.25rem, 4.2vw, 4rem);
   --max: 105rem;
   --nav-h: 4rem;
-  --pad: clamp(6.5rem, 13vw, 12.5rem);
+  --pad: clamp(4rem, 7.5vw, 7.5rem);         /* space below a section's content */
+  --pad-top: clamp(1.75rem, 3vw, 2.5rem);    /* space above a section's label line */
   --col: calc(100% / 12);
 
   --ease: cubic-bezier(.16, 1, .3, 1);
@@ -441,14 +442,34 @@ html:not(.js) .burger { display: none; } /* the menu needs JS; without it the pa
 }
 
 /* ---------- Sections ---------- */
-.section { position: relative; padding-block: var(--pad); }
+/* Each section opens with its ruled label line close to the top, so the line itself
+   marks the break and the space between sections is one gap, not two stacked ones. */
+.section { position: relative; padding-block: var(--pad-top) var(--pad); }
+.hero + .section, .strip + .section { padding-top: clamp(3.5rem, 6vw, 5.5rem); }
 
-.sec-head { display: flex; align-items: center; gap: 1rem; margin-bottom: clamp(2.5rem, 6vw, 5.5rem); }
+.sec-head { display: flex; align-items: center; gap: 1rem; margin-bottom: clamp(2rem, 4.5vw, 4rem); }
 .sec-head__rule { flex: 1; height: 1px; background: var(--line-2); transform-origin: left; }
 .js .sec-head__rule { transform: scaleX(0); transition: transform 1.5s var(--ease) .15s; }
 .js .sec-head.in .sec-head__rule { transform: none; }
 
-.split-head { display: grid; gap: 1.5rem; margin-bottom: clamp(3rem, 7vw, 6.5rem); }
+.split-head { display: grid; gap: 1.5rem; margin-bottom: clamp(2.5rem, 5vw, 4.5rem); }
+
+/* A closing line at the foot of a section, so it ends on purpose instead of trailing off. */
+.closer {
+  display: grid; align-items: center; gap: 1.5rem 3rem;
+  margin-top: clamp(2.5rem, 5vw, 4.5rem); padding-top: clamp(1.75rem, 3vw, 2.5rem);
+  border-top: 1px solid var(--line-2);
+}
+.closer__line {
+  max-width: 26em;
+  font-family: var(--serif); font-weight: 300; font-size: clamp(1.5rem, 2.6vw, 2.5rem);
+  line-height: 1.15; letter-spacing: -.015em; color: var(--white);
+  text-wrap: balance;
+}
+.closer__line em { font-style: italic; color: var(--silver); }
+.closer .btn { justify-self: start; }
+.closer__mark { width: 2.75rem; height: 2.75rem; color: var(--silver); }
+@media (min-width: 900px) { .closer { grid-template-columns: minmax(0, 1fr) auto; } }
 @media (min-width: 1024px) {
   .split-head { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: var(--col); align-items: end; }
 }
@@ -460,7 +481,7 @@ html:not(.js) .burger { display: none; } /* the menu needs JS; without it the pa
   .position__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
   .position__grid .statement { grid-column: 3 / span 9; }
 }
-.notes { display: grid; gap: 2rem; margin-top: clamp(3.5rem, 8vw, 7rem); }
+.notes { display: grid; gap: 2rem; margin-top: clamp(3rem, 6vw, 5rem); }
 .notes li { padding-top: 1.25rem; border-top: 1px solid var(--line-2); }
 .notes__t { font-family: var(--mono); font-size: .75rem; font-weight: 400; letter-spacing: .08em; text-transform: uppercase; color: var(--paper); margin-bottom: .75rem; }
 .notes p { color: var(--mute); max-width: 27em; }
@@ -521,7 +542,7 @@ html:not(.js) .burger { display: none; } /* the menu needs JS; without it the pa
   .pillar.is-active .pillar__body p { color: var(--paper); }
 }
 
-.criteria { display: grid; gap: 1.5rem; margin-top: clamp(3.5rem, 8vw, 7rem); }
+.criteria { display: grid; gap: 1.5rem; margin-top: clamp(3rem, 6vw, 5rem); }
 .criteria__label { color: var(--paper); }
 .criteria__list { display: grid; }
 .criteria__list li { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); gap: .3rem 1rem; padding-block: 1.25rem; border-top: 1px solid var(--line); }
@@ -595,7 +616,7 @@ html:not(.js) .burger { display: none; } /* the menu needs JS; without it the pa
 
 /* ---------- 04 Process ---------- */
 .process { position: relative; }
-.process__sticky { padding-block: var(--pad); }
+.process__sticky { padding-block: var(--pad-top) var(--pad); }
 .process__head .h2 { margin-bottom: clamp(2.5rem, 5vw, 4rem); }
 .process__track { display: grid; }
 .chapter {
@@ -647,7 +668,7 @@ html:not(.js) .burger { display: none; } /* the menu needs JS; without it the pa
 .is-pinned .chapter.is-active { opacity: 1; }
 .is-pinned .chapter__num { font-size: clamp(4rem, 14vh, 9.5rem); }
 .is-pinned .process__foot { display: block; }
-.process__marks { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.process__marks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .process__marks li {
   position: relative; padding: 0 .75rem .8rem 0;
   font-family: var(--mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase;
@@ -752,7 +773,6 @@ html:not(.js) .burger { display: none; } /* the menu needs JS; without it the pa
 }
 
 /* ---------- 08 Apply ---------- */
-.apply { border-top: 1px solid var(--line); }
 .apply__grid { display: grid; gap: clamp(2.5rem, 6vw, 5rem); }
 .apply__copy { display: grid; gap: 1.75rem; justify-items: start; }
 .next { width: 100%; max-width: 30rem; display: grid; border-top: 1px solid var(--line-2); }
