@@ -65,7 +65,7 @@
             <li><a href="#talent" data-spy="talent">Talent</a></li>
             <li><a href="#management" data-spy="management">Management</a></li>
             <li><a href="#process" data-spy="process">Process</a></li>
-            <li><a href="#partners" data-spy="partners">Partners</a></li>
+            <li><a href="#beliefs" data-spy="beliefs">Beliefs</a></li>
           </ol>
         </nav>
 
@@ -89,7 +89,7 @@
         <li><a href="#management"><span class="menu__n">03</span>Management</a></li>
         <li><a href="#process"><span class="menu__n">04</span>Process</a></li>
         <li><a href="#standard"><span class="menu__n">05</span>Standard</a></li>
-        <li><a href="#partners"><span class="menu__n">06</span>Partners</a></li>
+        <li><a href="#beliefs"><span class="menu__n">06</span>Beliefs</a></li>
         <li><a href="#faq"><span class="menu__n">07</span>Questions</a></li>
       </ol>
       <div class="menu__foot">
@@ -375,53 +375,37 @@
       </div>
     </section>
 
-    <!-- ============ 06 Partners ============ -->
-    <section class="section partners" id="partners" data-section>
+    <!-- ============ 06 Beliefs ============
+         What the agency stands for, in five lines. Each line lights up as it reaches the
+         middle of the screen, and a thin line beside the numbers fills as you read. It ends
+         with one way in for creators and one for brands. -->
+    <section class="section beliefs" id="beliefs" data-section>
       <div class="wrap">
         <header class="sec-head" data-reveal>
-          <span class="tag">06</span><span class="tag tag--on">Partners</span><span class="sec-head__rule"></span>
+          <span class="tag">06</span><span class="tag tag--on">Beliefs</span><span class="sec-head__rule"></span>
         </header>
 
-        <div class="partners__grid">
-          <div class="partners__copy">
-            <h2 class="display h2" data-split data-reveal>For brands that need to be <em>believed</em></h2>
-            <p class="lead" data-reveal style="--d:120ms">Developers, founders and finance teams tune out advertising. They listen to people they already read. Tell us who you need to reach — we'll bring you the voices they trust, and run the partnership end to end.</p>
-            <ul class="points">
-              <li data-reveal><h3>Matched, not listed</h3><p>Voices chosen for who follows them, not how many.</p></li>
-              <li data-reveal><h3>Disclosed and on-voice</h3><p>The creator's own words, clearly labelled as advertising.</p></li>
-              <li data-reveal><h3>Measured</h3><p>Reported on real numbers.</p></li>
-            </ul>
-            <div data-reveal>
-              <a class="btn btn--ghost" href="#apply" data-apply="brand" data-magnetic><span class="btn__label">Start a partnership enquiry</span><svg class="btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-            </div>
-          </div>
+        <h2 class="display h2 beliefs__title" data-split data-reveal>What we <em>believe</em></h2>
 
-          <figure class="anatomy" data-reveal>
-            <div class="post" aria-hidden="true">
-              <div class="post__head">
-                <span class="post__avatar"><svg><use href="#mark"/></svg></span>
-                <span class="post__who"><i style="width:7.5rem"></i><i style="width:4.75rem"></i></span>
-                <span class="post__chip">Paid partnership<b class="pin">A</b></span>
-              </div>
-              <div class="post__text"><i style="width:100%"></i><i style="width:92%"></i><i style="width:61%"></i><b class="pin">B</b></div>
-              <div class="post__media"><svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet"><use href="#mark"/></svg></div>
-              <div class="post__stats">
-                <span><svg><use href="#i-reply"/></svg><i></i></span>
-                <span><svg><use href="#i-repost"/></svg><i></i></span>
-                <span><svg><use href="#i-like"/></svg><i></i></span>
-                <span><svg><use href="#i-save"/></svg><i></i></span>
-                <span><svg><use href="#i-views"/></svg><i></i><b class="pin">C</b></span>
-              </div>
-            </div>
-            <figcaption class="anatomy__cap">
-              <p class="tag">Anatomy of a managed partnership (illustrative)</p>
-              <ol class="anatomy__legend">
-                <li><b class="pin">A</b>Labelled as an ad, in the first line and with the platform's own label.</li>
-                <li><b class="pin">B</b>Written by the creator, in their own voice.</li>
-                <li><b class="pin">C</b>Measured on real numbers, then reported.</li>
-              </ol>
-            </figcaption>
-          </figure>
+        <ol class="beliefs__list" data-beliefs>
+          <li class="belief"><span class="belief__n" aria-hidden="true">01</span><p class="belief__t">The right thousand beat the wrong million.</p></li>
+          <li class="belief"><span class="belief__n" aria-hidden="true">02</span><p class="belief__t">Expertise compounds. Hype doesn't.</p></li>
+          <li class="belief"><span class="belief__n" aria-hidden="true">03</span><p class="belief__t">Disclosure makes a partnership stronger, not weaker.</p></li>
+          <li class="belief"><span class="belief__n" aria-hidden="true">04</span><p class="belief__t">Your name is the asset. We protect it first.</p></li>
+          <li class="belief"><span class="belief__n" aria-hidden="true">05</span><p class="belief__t">We would rather lose a deal than spend your trust.</p></li>
+        </ol>
+
+        <div class="ways" data-reveal>
+          <a class="way" href="#apply">
+            <span class="tag">For creators</span>
+            <span class="way__t">Apply for representation</span>
+            <svg class="way__icon" aria-hidden="true"><use href="#i-arrow"/></svg>
+          </a>
+          <a class="way" href="#apply" data-apply="brand">
+            <span class="tag">For brands</span>
+            <span class="way__t">Start a partnership enquiry</span>
+            <svg class="way__icon" aria-hidden="true"><use href="#i-arrow"/></svg>
+          </a>
         </div>
       </div>
     </section>
@@ -556,7 +540,7 @@
         <p>Management and representation for technology and fintech creators on X.</p>
       </div>
       <nav class="foot__nav" aria-label="Footer">
-        <a href="#position">Position</a><a href="#work" hidden data-wall-link>Work</a><a href="#talent">Talent</a><a href="#management">Management</a><a href="#process">Process</a><a href="#standard">Standard</a><a href="#partners">Partners</a><a href="#faq">Questions</a><a href="#apply">Apply</a>
+        <a href="#position">Position</a><a href="#work" hidden data-wall-link>Work</a><a href="#talent">Talent</a><a href="#management">Management</a><a href="#process">Process</a><a href="#standard">Standard</a><a href="#beliefs">Beliefs</a><a href="#faq">Questions</a><a href="#apply">Apply</a>
       </nav>
       <div class="foot__legal">
         <p>© <span data-year>2026</span> <span data-site="legal"></span> All rights reserved.</p>

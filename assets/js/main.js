@@ -853,6 +853,26 @@
     }).observe(box);
   }
 
+  /* ---------- Beliefs: each line lights up as it reaches the middle of the screen ----------
+     A line is lit while its middle is above 62% of the screen's height, so scrolling back up
+     dims it again. The thin line beside the numbers follows the same point. */
+  function beliefs() {
+    const list = $('[data-beliefs]');
+    if (!list) return;
+    const items = $$('.belief', list);
+    if (reduced()) { items.forEach((it) => it.classList.add('is-lit')); return; }
+    scrollFns.push((y, vh) => {
+      const r = list.getBoundingClientRect();
+      if (r.bottom < -vh || r.top > vh * 2) return;
+      const mark = vh * 0.62;
+      list.style.setProperty('--p', clamp((mark - r.top) / Math.max(1, r.height)).toFixed(4));
+      items.forEach((it) => {
+        const b = it.getBoundingClientRect();
+        it.classList.toggle('is-lit', b.top + b.height / 2 < mark);
+      });
+    });
+  }
+
   /* ---------- Navigation glass ----------
      A soft highlight follows the pointer across the bar. Chromium-based browsers can run
      an SVG filter on what is behind an element, so there the bar also bends the page near
@@ -1176,6 +1196,7 @@
   xdiagram();
   accordions();
   flow();
+  beliefs();
   footWord();
   applyForm();
   cursor();
