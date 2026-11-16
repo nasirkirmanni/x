@@ -177,23 +177,31 @@
           <p class="lead" data-reveal style="--d:120ms">We work with a small number of people whose ideas move technology and finance. Follower counts don't decide it. Who is listening does.</p>
         </div>
 
-        <ul class="cols">
-          <li data-reveal>
-            <h3>Technology</h3>
-            <p>Builders, engineers and educators who work in public — across software, AI and the tools changing how people work. They show real work, and their audience acts on it.</p>
+        <!-- An index of the three kinds of people we represent: one row each, the name set
+             large with a single line beside it. -->
+        <ol class="roster">
+          <li class="roster__row" data-reveal>
+            <span class="roster__n" aria-hidden="true">01</span>
+            <h3 class="roster__t">Technology</h3>
+            <p class="roster__d">Builders, engineers and educators who work in public — across software, AI and the tools changing how people work.</p>
+            <svg class="roster__x" aria-hidden="true"><use href="#mark"/></svg>
           </li>
-          <li data-reveal style="--d:90ms">
-            <h3>Fintech</h3>
-            <p>Operators, analysts and investors who explain money, markets and financial technology to the people who make decisions with it.</p>
+          <li class="roster__row" data-reveal style="--d:90ms">
+            <span class="roster__n" aria-hidden="true">02</span>
+            <h3 class="roster__t">Fintech</h3>
+            <p class="roster__d">Operators, analysts and investors who explain money, markets and financial technology to the people who make decisions with it.</p>
+            <svg class="roster__x" aria-hidden="true"><use href="#mark"/></svg>
           </li>
-          <li data-reveal style="--d:180ms">
-            <h3>Founders</h3>
-            <p>Founders whose own voice is their company's most efficient channel. We manage the presence, so they can keep building.</p>
+          <li class="roster__row" data-reveal style="--d:180ms">
+            <span class="roster__n" aria-hidden="true">03</span>
+            <h3 class="roster__t">Founders</h3>
+            <p class="roster__d">Founders whose own voice is their company's most efficient channel. We manage the presence, so they can keep building.</p>
+            <svg class="roster__x" aria-hidden="true"><use href="#mark"/></svg>
           </li>
-        </ul>
+        </ol>
 
         <div class="criteria">
-          <p class="tag criteria__label" data-reveal>What we look for</p>
+          <p class="tag tag--on criteria__label" data-reveal>What we look for</p>
           <ol class="criteria__list">
             <li data-reveal><span class="tag">01</span><h3>Signal over scale</h3><p>The right audience matters more than a large one.</p></li>
             <li data-reveal style="--d:80ms"><span class="tag">02</span><h3>Original work</h3><p>Your own ideas and your own results, shown in public.</p></li>
@@ -232,9 +240,9 @@
     </section>
 
     <!-- ============ 04 Process ============
-         Four steps beside a drawing. The steps take turns while the section is on screen:
-         the active step's bar fills, and the card shows that step's drawing. Hovering or
-         choosing a step holds it. -->
+         Four steps beside a drawing. As soon as the section comes into view the steps start
+         taking turns, 1 to 4 and round again: the active step's bar fills, and the card
+         shows that step's drawing. Clicking a step shows it straight away. -->
     <section class="section process" id="process" data-section>
       <div class="wrap">
         <header class="sec-head" data-reveal>
@@ -283,13 +291,19 @@
                 <circle class="flow__dot" r="2" fill="currentColor" stroke="none"><animateMotion dur="2.2s" begin="0s" repeatCount="indefinite" path="M158 180Q240 140 322 180"/></circle>
                 <circle class="flow__dot" r="2" fill="currentColor" stroke="none"><animateMotion dur="2.2s" begin="1.1s" repeatCount="indefinite" path="M322 180Q240 220 158 180"/></circle>
               </g>
+              <!-- Step 3: the two circles glide together and keep moving; main.js moves them
+                   and redraws the shared part. -->
               <g class="flow__art" data-art="2">
-                <path class="draw" pathLength="1" style="--k:0" stroke-opacity=".5" d="M114 180a86 86 0 1 0 172 0a86 86 0 1 0 -172 0"/>
-                <path class="draw" pathLength="1" style="--k:1" stroke-opacity=".5" d="M194 180a86 86 0 1 0 172 0a86 86 0 1 0 -172 0"/>
-                <path class="draw" pathLength="1" style="--k:2" d="M240 103.87A86 86 0 0 1 240 256.13A86 86 0 0 1 240 103.87Z"/>
-                <circle class="fade" style="--k:3" cx="240" cy="180" r="2.4" fill="currentColor" stroke="none"/>
-                <text class="fade" style="--k:4" x="157" y="184" text-anchor="middle">You</text>
-                <use class="fade" style="--k:5" href="#mark" x="311" y="168" width="24" height="24"/>
+                <g data-ca>
+                  <path class="draw" pathLength="1" style="--k:0" stroke-opacity=".5" d="M114 180a86 86 0 1 0 172 0a86 86 0 1 0 -172 0"/>
+                  <text class="fade" style="--k:3" x="157" y="184" text-anchor="middle">You</text>
+                </g>
+                <g data-cb>
+                  <path class="draw" pathLength="1" style="--k:1" stroke-opacity=".5" d="M194 180a86 86 0 1 0 172 0a86 86 0 1 0 -172 0"/>
+                  <use class="fade" style="--k:4" href="#mark" x="311" y="168" width="24" height="24"/>
+                </g>
+                <path class="draw" pathLength="1" style="--k:2" d="M240 103.87A86 86 0 0 1 240 256.13A86 86 0 0 1 240 103.87Z" data-lens/>
+                <circle cx="240" cy="180" r="2.4" fill="currentColor" stroke="none" data-lensdot/>
               </g>
               <g class="flow__art" data-art="3">
                 <circle class="flow__orbit" cx="240" cy="180" r="48" stroke-opacity=".35" stroke-dasharray="1.5 6"/>

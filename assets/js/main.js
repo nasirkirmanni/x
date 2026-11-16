@@ -765,10 +765,13 @@
     });
   }
 
-  /* ---------- Process: four steps, each with its own drawing ----------
-     While the section is on screen the steps take turns: the active step's bar fills, then
-     the next step and its drawing take over. Hovering a step (or focusing it) holds it;
-     clicking or tapping shows it straight away. */
+  /* ---------- Process: four steps that take turns ----------
+     As soon as any part of the section scrolls into view, the steps start taking turns:
+     1, 2, 3, 4 and round again, a few seconds each. The active step's bar fills, earlier
+     steps keep a full bar, and the card shows the step's drawing. Each time the section
+     comes back into view it starts again from step 1. Clicking a step shows it straight
+     away and carries on from there. In step 3 the two circles glide together, and keep
+     breathing until the next step. */
   function flow() {
     const box = $('[data-flow]');
     if (!box) return;
@@ -776,8 +779,37 @@
     const arts = $$('.flow__art', box);
     const list = $('.flow__steps', box);
     const svg = $('svg', box);
-    const DUR = 4200;
-    let current = 0, timer = 0, visible = false, held = false;
+    const ca = $('[data-ca]', box), cb = $('[data-cb]', box);
+    const lens = $('[data-lens]', box), lensDot = $('[data-lensdot]', box);
+    const N = steps.length;
+    const DUR = 3500;
+    let current = 0, timer = 0, raf = 0, visible = false, held = false, stepAt = performance.now();
+    const t0 = performance.now();
+
+    // Step 3: the circles start apart, glide together, and the shared part lights up.
+    const R = 86, FAR = 214, NEAR = 80;
+    const agree = (now) => {
+      if (!ca || !cb || !lens) return;
+      const t = reduced() ? 1 : current === 2 ? clamp((now - stepAt - 300) / 1700) : 0;
+      const e = smooth(t);
+      const breath = reduced() ? 0 : Math.sin(((now - t0) / 1000) * 1.4) * 6 * e;
+      const d = lerp(FAR, NEAR, e) + breath;
+      ca.setAttribute('transform', 'translate(' + (40 - d / 2).toFixed(2) + ' 0)');   // centre 200 → 240 − d/2
+      cb.setAttribute('transform', 'translate(' + (d / 2 - 40).toFixed(2) + ' 0)');   // centre 280 → 240 + d/2
+      if (d < 2 * R) {
+        const h = Math.sqrt(R * R - (d / 2) * (d / 2));
+        const top = (180 - h).toFixed(2), bot = (180 + h).toFixed(2);
+        lens.setAttribute('d', 'M240 ' + top + 'A86 86 0 0 1 240 ' + bot + 'A86 86 0 0 1 240 ' + top + 'Z');
+      }
+      lens.style.opacity = clamp((2 * R - d) / 36).toFixed(3);
+      if (lensDot) lensDot.style.opacity = clamp((2 * R - d - 30) / 40).toFixed(3);
+    };
+    const tick = (now) => {
+      raf = 0;
+      agree(now);
+      if (visible && current === 2 && !reduced() && !document.hidden) raf = requestAnimationFrame(tick);
+    };
+    const loop = () => { if (!raf) raf = requestAnimationFrame(tick); };
 
     const schedule = () => {
       clearTimeout(timer);
@@ -788,38 +820,37 @@
       timer = setTimeout(() => show(current + 1), DUR);
     };
     const show = (n) => {
-      current = (n + steps.length) % steps.length;
+      current = (n + N) % N;
+      stepAt = performance.now();
       steps.forEach((s, k) => {
         const on = k === current;
         s.classList.toggle('is-on', on);
+        s.classList.toggle('is-done', k < current);
         if (on) s.setAttribute('aria-current', 'step'); else s.removeAttribute('aria-current');
       });
       arts.forEach((a, k) => a.classList.toggle('is-on', k === current));
+      agree(stepAt);
+      if (current === 2) loop();
       schedule();
     };
 
     box.style.setProperty('--flow-dur', DUR + 'ms');
-    steps.forEach((s, k) => {
-      s.addEventListener('click', () => show(k));
-      s.addEventListener('pointerenter', (e) => {
-        if (e.pointerType !== 'mouse') return;
-        held = true;
-        if (k !== current) show(k); else schedule();
-      });
-    });
+    steps.forEach((s, k) => s.addEventListener('click', () => show(k)));
+    // A keyboard user moving through the steps holds the one they are on.
     if (list) {
-      list.addEventListener('pointerleave', () => { if (held) { held = false; schedule(); } });
       list.addEventListener('focusin', (e) => { if (e.target.matches(':focus-visible')) { held = true; schedule(); } });
       list.addEventListener('focusout', (e) => { if (!list.contains(e.relatedTarget)) { held = false; schedule(); } });
     }
     if (reduced() && svg && svg.pauseAnimations) svg.pauseAnimations();
+    agree(performance.now());
 
-    if (!('IntersectionObserver' in window)) { box.classList.add('is-seen'); return; }
+    if (!('IntersectionObserver' in window)) { visible = true; box.classList.add('is-seen'); show(0); return; }
     new IntersectionObserver((entries) => {
+      const was = visible;
       visible = entries[0].isIntersecting;
-      if (visible) box.classList.add('is-seen');
-      schedule();
-    }, { threshold: 0.35 }).observe(box);
+      if (visible && !was) { box.classList.add('is-seen'); show(0); }   // start from step 1 every time it comes into view
+      else if (!visible) { clearTimeout(timer); box.classList.remove('is-running'); }
+    }).observe(box);
   }
 
   /* ---------- Navigation glass ----------

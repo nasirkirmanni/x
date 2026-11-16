@@ -108,7 +108,7 @@ svg { display: block; }
 main, .foot { position: relative; z-index: 1; }
 
 /* Single-column grids must not grow to fit wide content (it would overflow on phones). */
-.split-head, .cols, .criteria, .std, .partners__grid, .anatomy,
+.split-head, .std, .partners__grid, .anatomy,
 .faq__grid, .apply__grid, .foot__in { grid-template-columns: minmax(0, 1fr); }
 
 /* ---------- Dashed lines at the edges of the content ---------- */
@@ -568,29 +568,59 @@ a.card:focus-visible .card__media img { filter: grayscale(1) contrast(1.06) brig
   .wall__cell--invite:nth-child(3n + 1) { display: none; }
 }
 
-/* ---------- 02 Talent ---------- */
-.cols { display: grid; border-top: 1px solid var(--line-2); }
-.cols li { display: grid; gap: .5rem; padding-block: 1.4rem; border-bottom: 1px solid var(--line); }
-.cols h3 { font-size: var(--fs-h3); font-weight: 400; letter-spacing: -.02em; line-height: 1.3; color: var(--white); }
-.cols p { font-size: .9375rem; color: var(--mute); max-width: 30em; }
+/* ---------- 02 Talent ----------
+   An index of the three kinds of people we represent: one row each, the name set large and
+   a single line beside it. With a mouse, the row under the pointer lights up while the
+   others step back; its name eases right, the mark turns and a line draws along the row. */
+.roster { border-top: 1px solid var(--line-2); }
+.roster__row {
+  position: relative;
+  display: grid; grid-template-columns: 2.5rem minmax(0, 1fr) auto; align-items: center;
+  column-gap: 1rem; row-gap: .5rem;
+  padding-block: 1.5rem;
+  border-bottom: 1px solid var(--line-2);
+}
+.roster__row::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px;
+  background: var(--white); transform: scaleX(0); transform-origin: left;
+  transition: transform .9s var(--ease);
+}
+.roster__n { font-size: var(--fs-small); font-variant-numeric: tabular-nums; color: var(--dim); }
+.roster__t {
+  font-size: clamp(1.875rem, 2.6vw + .5rem, 3rem); font-weight: 300; line-height: 1.05; letter-spacing: -.032em;
+  color: var(--white);
+  transition: color .5s var(--ease), transform .7s var(--ease);
+}
+.roster__d { grid-column: 2 / -1; font-size: .9375rem; line-height: 1.6; color: var(--mute); max-width: 32em; transition: color .5s var(--ease); }
+.roster__x { grid-column: 3; grid-row: 1; width: 1.125rem; height: 1.125rem; color: var(--dim); transition: transform .9s var(--ease), color .5s var(--ease); }
 @media (min-width: 900px) {
-  .cols { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 2.5rem; border-top: 0; }
-  .cols li { align-content: start; padding-block: 1.25rem 0; border-top: 1px solid var(--line-2); border-bottom: 0; }
+  .roster__row { grid-template-columns: 4rem minmax(0, 5fr) minmax(0, 6fr) 2.5rem; column-gap: 1.5rem; padding-block: 2.1rem; }
+  .roster__d { grid-column: 3; grid-row: 1; }
+  .roster__x { grid-column: 4; justify-self: end; }
+}
+@media (hover: hover) and (pointer: fine) {
+  .roster:hover .roster__t, .roster:hover .roster__d { color: var(--dim); }
+  .roster__row:hover .roster__t { color: var(--white); transform: translateX(.5rem); }
+  .roster__row:hover .roster__d { color: var(--paper); }
+  .roster__row:hover .roster__x { color: var(--white); transform: rotate(90deg); }
+  .roster__row:hover::after { transform: none; }
 }
 
-.criteria { display: grid; gap: 1rem; margin-top: clamp(3rem, 6vw, 4.5rem); }
-.criteria__label { color: var(--paper); }
-.criteria__list { display: grid; }
-.criteria__list li { display: grid; grid-template-columns: 2.25rem minmax(0, 1fr); gap: .2rem .75rem; padding-block: 1.1rem; border-top: 1px solid var(--line); }
-.criteria__list .tag { padding-top: .1rem; font-variant-numeric: tabular-nums; }
-.criteria__list h3 { font-size: .9375rem; font-weight: 500; color: var(--white); }
-.criteria__list p { grid-column: 2; font-size: .9375rem; color: var(--mute); }
-@media (min-width: 768px) { .criteria__list { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 2.5rem; } }
-@media (min-width: 1024px) { .criteria { grid-template-columns: minmax(0, 2fr) minmax(0, 10fr); gap: 2.5rem; } }
-@media (min-width: 1200px) {
-  .criteria__list { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .criteria__list li { grid-template-columns: minmax(0, 1fr); gap: .35rem; }
-  .criteria__list p { grid-column: auto; }
+/* What we look for: four short columns divided by hairlines. */
+.criteria { margin-top: clamp(3.5rem, 7vw, 5.5rem); }
+.criteria__label { margin-bottom: 1.25rem; }
+.criteria__list { display: grid; grid-template-columns: minmax(0, 1fr); }
+.criteria__list li { display: grid; align-content: start; gap: .45rem; padding-block: 1.25rem; border-top: 1px solid var(--line); }
+.criteria__list .tag { font-variant-numeric: tabular-nums; }
+.criteria__list h3 { font-size: 1.25rem; font-weight: 300; line-height: 1.25; letter-spacing: -.02em; color: var(--white); }
+.criteria__list p { font-size: .875rem; color: var(--mute); max-width: 22em; }
+@media (min-width: 640px) {
+  .criteria__list { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 2rem; }
+}
+@media (min-width: 1024px) {
+  .criteria__list { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 0; }
+  .criteria__list li { padding: .35rem 1.75rem .35rem 1.5rem; border-top: 0; border-left: 1px solid var(--line-2); }
+  .criteria__list li:first-child { padding-left: 0; border-left: 0; }
 }
 
 /* ---------- 03 Management: one statement, nothing itemised ---------- */
@@ -661,9 +691,10 @@ a.card:focus-visible .card__media img { filter: grayscale(1) contrast(1.06) brig
 }
 
 /* ---------- 04 Process: four steps beside a drawing ----------
-   As on monaco.com: a short list of steps, each with a thin bar, next to a card. The steps
-   take turns while the section is on screen (flow() in main.js); the active step's bar fills
-   and the card shows that step's drawing, in the same line style as the X. */
+   As on monaco.com: a short list of steps, each with a thin bar, next to a card. As soon as
+   the section comes into view the steps take turns, 1 to 4 and round again (flow() in
+   main.js): the active step's bar fills, and the card shows its drawing, in the same line
+   style as the X. The page scrolls normally throughout. */
 .flow { display: grid; gap: clamp(2.25rem, 5vw, 3.5rem); }
 @media (min-width: 1024px) {
   .flow { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 4.5rem; align-items: center; }
@@ -686,8 +717,9 @@ a.card:focus-visible .card__media img { filter: grayscale(1) contrast(1.06) brig
   transform: scaleY(0); transform-origin: top;
   transition: transform .4s var(--ease);
 }
-.flow__step.is-on .flow__bar i { transform: none; }
-.flow.is-running .flow__step.is-on .flow__bar i { animation: flow-fill var(--flow-dur, 4.2s) linear both; }
+/* Steps already shown keep a full bar; the active one fills while it is shown. */
+.flow__step.is-done .flow__bar i, .flow__step.is-on .flow__bar i { transform: none; }
+.flow.is-running .flow__step.is-on .flow__bar i { animation: flow-fill var(--flow-dur, 3.5s) linear both; }
 @keyframes flow-fill { from { transform: scaleY(0); } to { transform: scaleY(1); } }
 .flow__n { font-size: var(--fs-small); font-variant-numeric: tabular-nums; color: var(--dim); }
 .flow__t { font-size: clamp(1.375rem, 1vw + 1rem, 1.875rem); font-weight: 300; line-height: 1.15; letter-spacing: -.024em; }
