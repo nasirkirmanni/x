@@ -232,38 +232,90 @@
     </section>
 
     <!-- ============ 04 Process ============
-         Four steps on one ruled line, and nothing else. The line draws itself once,
-         lighting each step in order. -->
+         Four steps beside a drawing. The steps take turns while the section is on screen:
+         the active step's bar fills, and the card shows that step's drawing. Hovering or
+         choosing a step holds it. -->
     <section class="section process" id="process" data-section>
       <div class="wrap">
         <header class="sec-head" data-reveal>
           <span class="tag">04</span><span class="tag tag--on">Process</span><span class="sec-head__rule"></span>
         </header>
 
-        <h2 class="display h2 process__title" data-split data-reveal>How it <em>begins</em></h2>
+        <div class="flow" data-flow>
+          <div class="flow__copy">
+            <h2 class="display h2" data-split data-reveal>How it <em>begins</em></h2>
 
-        <ol class="steps" role="list" data-steps data-reveal>
-          <li class="step">
-            <span class="step__n" aria-hidden="true">01</span>
-            <span class="step__rule" aria-hidden="true"></span>
-            <h3 class="step__t"><a href="#apply">Apply<svg aria-hidden="true"><use href="#i-arrow"/></svg></a></h3>
-          </li>
-          <li class="step">
-            <span class="step__n" aria-hidden="true">02</span>
-            <span class="step__rule" aria-hidden="true"></span>
-            <h3 class="step__t">Conversation</h3>
-          </li>
-          <li class="step">
-            <span class="step__n" aria-hidden="true">03</span>
-            <span class="step__rule" aria-hidden="true"></span>
-            <h3 class="step__t">Agreement</h3>
-          </li>
-          <li class="step">
-            <span class="step__n" aria-hidden="true">04</span>
-            <span class="step__rule" aria-hidden="true"><svg class="step__end"><use href="#mark"/></svg></span>
-            <h3 class="step__t">Representation</h3>
-          </li>
-        </ol>
+            <ol class="flow__steps" data-reveal style="--d:120ms">
+              <li><button class="flow__step is-on" type="button" aria-current="step"><span class="flow__bar" aria-hidden="true"><i></i></span><span class="flow__n">01</span><span class="flow__t">Apply</span></button></li>
+              <li><button class="flow__step" type="button"><span class="flow__bar" aria-hidden="true"><i></i></span><span class="flow__n">02</span><span class="flow__t">Conversation</span></button></li>
+              <li><button class="flow__step" type="button"><span class="flow__bar" aria-hidden="true"><i></i></span><span class="flow__n">03</span><span class="flow__t">Agreement</span></button></li>
+              <li><button class="flow__step" type="button"><span class="flow__bar" aria-hidden="true"><i></i></span><span class="flow__n">04</span><span class="flow__t">Representation</span></button></li>
+            </ol>
+
+            <a class="link flow__link" href="#apply" data-reveal style="--d:200ms">Start with step one</a>
+          </div>
+
+          <!-- One drawing per step, in the X's line style: you reach out, you talk,
+               you agree, and the X closes in on you. -->
+          <figure class="flow__stage" data-reveal style="--d:160ms" aria-hidden="true">
+            <svg viewBox="0 0 480 360" fill="none" stroke="currentColor" stroke-width=".9" stroke-linecap="round" focusable="false">
+              <g class="flow__art is-on" data-art="0">
+                <circle class="flow__ping" cx="140" cy="180" r="7"/>
+                <circle class="flow__ping flow__ping--late" cx="140" cy="180" r="7"/>
+                <path class="draw" pathLength="1" style="--k:0" d="M133 180a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/>
+                <path class="draw" pathLength="1" style="--k:1" d="M152 180H322"/>
+                <circle class="fade" style="--k:2" cx="140" cy="180" r="2.2" fill="currentColor" stroke="none"/>
+                <use class="fade" style="--k:3" href="#mark" x="326" y="168" width="24" height="24"/>
+                <text class="fade" style="--k:4" x="124" y="184" text-anchor="end">You</text>
+                <circle class="flow__dot" r="2" fill="currentColor" stroke="none"><animateMotion dur="2.4s" begin="0s" repeatCount="indefinite" path="M152 180H322"/></circle>
+              </g>
+              <g class="flow__art" data-art="1">
+                <path class="draw" pathLength="1" style="--k:0" d="M143 180a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/>
+                <path class="draw" pathLength="1" style="--k:1" d="M158 180Q240 140 322 180"/>
+                <path class="draw" pathLength="1" style="--k:2" d="M158 180Q240 220 322 180"/>
+                <path class="draw" pathLength="1" style="--k:3" stroke-opacity="0.6" d="M158 180Q240 100 322 180"/>
+                <path class="draw" pathLength="1" style="--k:4" stroke-opacity="0.6" d="M158 180Q240 260 322 180"/>
+                <path class="draw" pathLength="1" style="--k:5" stroke-opacity="0.32" d="M158 180Q240 60 322 180"/>
+                <path class="draw" pathLength="1" style="--k:6" stroke-opacity="0.32" d="M158 180Q240 300 322 180"/>
+                <circle class="fade" style="--k:7" cx="150" cy="180" r="2.2" fill="currentColor" stroke="none"/>
+                <use class="fade" style="--k:8" href="#mark" x="326" y="168" width="24" height="24"/>
+                <text class="fade" style="--k:9" x="134" y="184" text-anchor="end">You</text>
+                <circle class="flow__dot" r="2" fill="currentColor" stroke="none"><animateMotion dur="2.2s" begin="0s" repeatCount="indefinite" path="M158 180Q240 140 322 180"/></circle>
+                <circle class="flow__dot" r="2" fill="currentColor" stroke="none"><animateMotion dur="2.2s" begin="1.1s" repeatCount="indefinite" path="M322 180Q240 220 158 180"/></circle>
+              </g>
+              <g class="flow__art" data-art="2">
+                <path class="draw" pathLength="1" style="--k:0" stroke-opacity=".5" d="M114 180a86 86 0 1 0 172 0a86 86 0 1 0 -172 0"/>
+                <path class="draw" pathLength="1" style="--k:1" stroke-opacity=".5" d="M194 180a86 86 0 1 0 172 0a86 86 0 1 0 -172 0"/>
+                <path class="draw" pathLength="1" style="--k:2" d="M240 103.87A86 86 0 0 1 240 256.13A86 86 0 0 1 240 103.87Z"/>
+                <circle class="fade" style="--k:3" cx="240" cy="180" r="2.4" fill="currentColor" stroke="none"/>
+                <text class="fade" style="--k:4" x="157" y="184" text-anchor="middle">You</text>
+                <use class="fade" style="--k:5" href="#mark" x="311" y="168" width="24" height="24"/>
+              </g>
+              <g class="flow__art" data-art="3">
+                <circle class="flow__orbit" cx="240" cy="180" r="48" stroke-opacity=".35" stroke-dasharray="1.5 6"/>
+                <path class="draw" pathLength="1" style="--k:0" stroke-opacity=".55" d="M130.4 80.3L216.67 166.56"/>
+                <path class="draw" pathLength="1" style="--k:1" d="M135.35 75.35L221.62 161.62"/>
+                <path class="draw" pathLength="1" style="--k:2" stroke-opacity=".55" d="M140.3 70.4L226.56 156.67"/>
+                <path class="draw" pathLength="1" style="--k:3" stroke-opacity=".55" d="M339.7 70.4L253.44 156.67"/>
+                <path class="draw" pathLength="1" style="--k:4" d="M344.65 75.35L258.38 161.62"/>
+                <path class="draw" pathLength="1" style="--k:5" stroke-opacity=".55" d="M349.6 80.3L263.33 166.56"/>
+                <path class="draw" pathLength="1" style="--k:6" stroke-opacity=".55" d="M349.6 279.7L263.33 193.44"/>
+                <path class="draw" pathLength="1" style="--k:7" d="M344.65 284.65L258.38 198.38"/>
+                <path class="draw" pathLength="1" style="--k:8" stroke-opacity=".55" d="M339.7 289.6L253.44 203.33"/>
+                <path class="draw" pathLength="1" style="--k:9" stroke-opacity=".55" d="M140.3 289.6L226.56 203.33"/>
+                <path class="draw" pathLength="1" style="--k:10" d="M135.35 284.65L221.62 198.38"/>
+                <path class="draw" pathLength="1" style="--k:11" stroke-opacity=".55" d="M130.4 279.7L216.67 193.44"/>
+                <path class="draw" pathLength="1" style="--k:12" d="M231 180a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/>
+                <circle class="fade" style="--k:13" cx="240" cy="180" r="2.4" fill="currentColor" stroke="none"/>
+                <text class="fade" style="--k:14" x="240" y="214" text-anchor="middle">You</text>
+                <circle class="flow__dot" r="2" fill="currentColor" stroke="none"><animateMotion dur="2s" begin="0s" repeatCount="indefinite" path="M135.35 75.35L221.62 161.62"/></circle>
+                <circle class="flow__dot" r="2" fill="currentColor" stroke="none"><animateMotion dur="2s" begin="0.5s" repeatCount="indefinite" path="M344.65 75.35L258.38 161.62"/></circle>
+                <circle class="flow__dot" r="2" fill="currentColor" stroke="none"><animateMotion dur="2s" begin="1s" repeatCount="indefinite" path="M344.65 284.65L258.38 198.38"/></circle>
+                <circle class="flow__dot" r="2" fill="currentColor" stroke="none"><animateMotion dur="2s" begin="1.5s" repeatCount="indefinite" path="M135.35 284.65L221.62 198.38"/></circle>
+              </g>
+            </svg>
+          </figure>
+        </div>
       </div>
     </section>
 

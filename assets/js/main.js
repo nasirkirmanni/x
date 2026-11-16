@@ -765,17 +765,61 @@
     });
   }
 
-  /* ---------- Process: the ruled line draws once, when most of it is in view ---------- */
-  function steps() {
-    const list = $('[data-steps]');
-    if (!list) return;
-    if (!('IntersectionObserver' in window)) { list.classList.add('is-drawn'); return; }
-    const io = new IntersectionObserver((entries) => {
-      if (!entries.some((entry) => entry.isIntersecting)) return;
-      list.classList.add('is-drawn');
-      io.disconnect();
-    }, { threshold: 0.6 });
-    io.observe(list);
+  /* ---------- Process: four steps, each with its own drawing ----------
+     While the section is on screen the steps take turns: the active step's bar fills, then
+     the next step and its drawing take over. Hovering a step (or focusing it) holds it;
+     clicking or tapping shows it straight away. */
+  function flow() {
+    const box = $('[data-flow]');
+    if (!box) return;
+    const steps = $$('.flow__step', box);
+    const arts = $$('.flow__art', box);
+    const list = $('.flow__steps', box);
+    const svg = $('svg', box);
+    const DUR = 4200;
+    let current = 0, timer = 0, visible = false, held = false;
+
+    const schedule = () => {
+      clearTimeout(timer);
+      box.classList.remove('is-running');
+      if (!visible || held || reduced()) return;
+      void box.offsetWidth;   // restarts the bar's fill
+      box.classList.add('is-running');
+      timer = setTimeout(() => show(current + 1), DUR);
+    };
+    const show = (n) => {
+      current = (n + steps.length) % steps.length;
+      steps.forEach((s, k) => {
+        const on = k === current;
+        s.classList.toggle('is-on', on);
+        if (on) s.setAttribute('aria-current', 'step'); else s.removeAttribute('aria-current');
+      });
+      arts.forEach((a, k) => a.classList.toggle('is-on', k === current));
+      schedule();
+    };
+
+    box.style.setProperty('--flow-dur', DUR + 'ms');
+    steps.forEach((s, k) => {
+      s.addEventListener('click', () => show(k));
+      s.addEventListener('pointerenter', (e) => {
+        if (e.pointerType !== 'mouse') return;
+        held = true;
+        if (k !== current) show(k); else schedule();
+      });
+    });
+    if (list) {
+      list.addEventListener('pointerleave', () => { if (held) { held = false; schedule(); } });
+      list.addEventListener('focusin', (e) => { if (e.target.matches(':focus-visible')) { held = true; schedule(); } });
+      list.addEventListener('focusout', (e) => { if (!list.contains(e.relatedTarget)) { held = false; schedule(); } });
+    }
+    if (reduced() && svg && svg.pauseAnimations) svg.pauseAnimations();
+
+    if (!('IntersectionObserver' in window)) { box.classList.add('is-seen'); return; }
+    new IntersectionObserver((entries) => {
+      visible = entries[0].isIntersecting;
+      if (visible) box.classList.add('is-seen');
+      schedule();
+    }, { threshold: 0.35 }).observe(box);
   }
 
   /* ---------- Navigation glass ----------
@@ -1100,7 +1144,7 @@
   xfield();
   xdiagram();
   accordions();
-  steps();
+  flow();
   footWord();
   applyForm();
   cursor();

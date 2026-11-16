@@ -660,74 +660,70 @@ a.card:focus-visible .card__media img { filter: grayscale(1) contrast(1.06) brig
   .xd-stage { transform: none; }
 }
 
-/* ---------- 04 Process: four steps on one ruled line ----------
-   When most of the figure is in view the line draws once, left to right, and each step
-   lights as the line reaches it. On a phone the steps stack, and each row's rule gets a
-   short white lead-in. */
-.process__title { margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+/* ---------- 04 Process: four steps beside a drawing ----------
+   As on monaco.com: a short list of steps, each with a thin bar, next to a card. The steps
+   take turns while the section is on screen (flow() in main.js); the active step's bar fills
+   and the card shows that step's drawing, in the same line style as the X. */
+.flow { display: grid; gap: clamp(2.25rem, 5vw, 3.5rem); }
+@media (min-width: 1024px) {
+  .flow { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 4.5rem; align-items: center; }
+}
+.flow__copy { display: grid; justify-items: start; }
 
-.steps { display: grid; grid-template-columns: minmax(0, 1fr); border-bottom: 1px solid var(--line-2); }
-.step {
-  --t0: 0ms; --dur: 420ms;   /* when the line reaches this step, and how long it takes to cross it */
-  display: grid; grid-template-columns: 3rem minmax(0, 1fr); align-items: baseline;
+.flow__steps { width: 100%; display: grid; gap: .25rem; margin-top: clamp(2rem, 4vw, 2.75rem); }
+.flow__step {
+  width: 100%; min-height: 3.5rem;
+  display: grid; grid-template-columns: 2px 2.25rem minmax(0, 1fr); align-items: center; column-gap: 1.25rem;
+  padding-block: .6rem; text-align: left;
+  color: var(--dim);
+  transition: color .5s var(--ease);
 }
-.step:nth-child(2) { --t0: 420ms; --dur: 460ms; }
-.step:nth-child(3) { --t0: 880ms; --dur: 520ms; }
-.step:nth-child(4) { --t0: 1400ms; --dur: 720ms; }
+.flow__step:hover { color: var(--mute); }
+.flow__step.is-on { color: var(--white); }
+.flow__bar { position: relative; align-self: stretch; overflow: hidden; border-radius: 2px; background: var(--line-2); }
+.flow__bar i {
+  position: absolute; inset: 0; background: var(--white);
+  transform: scaleY(0); transform-origin: top;
+  transition: transform .4s var(--ease);
+}
+.flow__step.is-on .flow__bar i { transform: none; }
+.flow.is-running .flow__step.is-on .flow__bar i { animation: flow-fill var(--flow-dur, 4.2s) linear both; }
+@keyframes flow-fill { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+.flow__n { font-size: var(--fs-small); font-variant-numeric: tabular-nums; color: var(--dim); }
+.flow__t { font-size: clamp(1.375rem, 1vw + 1rem, 1.875rem); font-weight: 300; line-height: 1.15; letter-spacing: -.024em; }
+.flow__link { margin-top: 1.5rem; }
 
-.step__rule { position: relative; grid-area: 1 / 1 / 2 / -1; display: block; height: 1px; background: var(--line-2); }
-.step__rule::before {
-  content: ""; position: absolute; left: 0; top: 0; width: 2rem; height: 1px; background: var(--white);
-  transform-origin: left; transition: transform var(--dur) linear calc(var(--t0) + 200ms);
+/* The card: a faint dot grid, with the drawing for the active step. */
+.flow__stage {
+  position: relative; width: 100%; aspect-ratio: 4 / 3; overflow: hidden;
+  border: 1px solid var(--line-2); border-radius: 1.25rem;
+  background: radial-gradient(rgba(255, 255, 255, .09) 1px, transparent 1.4px) 0 0 / 24px 24px, var(--ink-1);
+  color: var(--white);
 }
-.step:last-child .step__rule::before { transition-timing-function: cubic-bezier(.2, .7, .3, 1); }
-.step__end { display: none; }
+.flow__stage svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.flow__stage text { font-family: var(--font); font-size: 11px; font-weight: 500; letter-spacing: 0; fill: var(--mute); stroke: none; }
 
-.step__n {
-  grid-area: 2 / 1; padding-block: 1.25rem;
-  font-size: var(--fs-small); font-variant-numeric: tabular-nums; color: var(--dim);
-}
-.step__t {
-  grid-area: 2 / 2; padding-block: 1.25rem;
-  font-size: 1.375rem; font-weight: 300; line-height: 1.15; letter-spacing: -.024em; color: var(--white);
-}
-.step__n, .step__t { transition: opacity .9s var(--ease) calc(var(--t0) + 200ms); }
-.step__t a { display: inline-flex; align-items: center; gap: .45em; padding-block: .6rem; margin-block: -.6rem; }
-.step__t a svg {
-  flex: none; width: .55em; height: .55em; color: var(--mute);
-  transition: transform .55s var(--ease), color var(--t-fast);
-}
-.step__t a:hover svg, .step__t a:focus-visible svg { transform: translateX(.22em); color: var(--white); }
-
-@media (min-width: 768px) {
-  .steps { grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 0; }
-  .step { display: flex; flex-direction: column; align-items: flex-start; }
-  .step__n { padding-block: 0 1rem; }
-  .step__rule { align-self: stretch; flex: none; }
-  .step__rule::before { width: 100%; }
-  /* A tick hangs from the line at the start of each step. */
-  .step__rule::after {
-    content: ""; position: absolute; left: 0; top: 0; width: 1px; height: .75rem; background: var(--white);
-    transform-origin: top; transition: transform .7s var(--ease) calc(var(--t0) + 200ms), opacity .7s var(--ease) calc(var(--t0) + 200ms);
-  }
-  /* The line ends in the mark. */
-  .step__end {
-    display: block; position: absolute; right: 0; top: 50%; z-index: 1; box-sizing: content-box;
-    width: 1.125rem; height: 1.125rem; padding-left: .6rem; margin-top: -.5625rem;
-    background: var(--black); color: var(--white);
-    transition: opacity .8s var(--ease) calc(var(--t0) + var(--dur) + 100ms);
-  }
-  .step__t { padding-block: 1.25rem 0; padding-right: .75rem; font-size: clamp(1.25rem, 1vw + .65rem, 1.625rem); }
-}
-
-/* Before the line has drawn: steps are dim and the line is plain. Skipped without JavaScript,
-   and for anyone who has asked for reduced motion. */
-@media (prefers-reduced-motion: no-preference) {
-  .js .steps:not(.is-drawn) .step__rule::before { transform: scaleX(0); }
-  .js .steps:not(.is-drawn) .step__rule::after { transform: scaleY(.45); opacity: .4; }
-  .js .steps:not(.is-drawn) .step__n { opacity: .35; }
-  .js .steps:not(.is-drawn) .step__t { opacity: .38; }
-  .js .steps:not(.is-drawn) .step__end { opacity: .3; }
+html:not(.js) .flow__art:not([data-art="3"]) { display: none; }
+.js .flow__art { opacity: 0; transition: opacity .45s var(--ease); }
+.js .flow__art.is-on { opacity: 1; transition-delay: .1s; }
+/* Lines draw in when their step becomes active (and the section has been seen). */
+.js .flow__art .draw { stroke-dasharray: 1 1; stroke-dashoffset: 1; }
+.js .flow.is-seen .flow__art.is-on .draw { stroke-dashoffset: 0; transition: stroke-dashoffset 1.2s var(--ease) calc(var(--k, 0) * 70ms + .15s); }
+.js .flow__art .fade { opacity: 0; }
+.js .flow.is-seen .flow__art.is-on .fade { opacity: 1; transition: opacity .8s var(--ease) calc(var(--k, 0) * 70ms + .5s); }
+/* Small signals travel along the lines, and the first node sends out rings. */
+.flow__dot { opacity: 0; transition: opacity .6s var(--ease); }
+.flow.is-seen .flow__art.is-on .flow__dot { opacity: 1; transition-delay: 1.2s; }
+.flow__ping { opacity: 0; vector-effect: non-scaling-stroke; transform-box: fill-box; transform-origin: center; }
+.flow.is-seen .flow__art.is-on .flow__ping { animation: flow-ping 2.4s var(--ease-io) infinite; }
+.flow.is-seen .flow__art.is-on .flow__ping--late { animation-delay: 1.2s; }
+@keyframes flow-ping { 0% { transform: scale(1); opacity: .55; } 100% { transform: scale(5); opacity: 0; } }
+.flow__orbit { transform-box: fill-box; transform-origin: center; }
+.flow.is-seen .flow__art.is-on .flow__orbit { animation: xd-turn 20s linear infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .js .flow__art .draw { stroke-dashoffset: 0; }
+  .js .flow__art .fade { opacity: 1; }
+  .flow__dot, .flow__ping { display: none; }
 }
 
 /* ---------- 05 Standard ---------- */
