@@ -100,7 +100,7 @@ svg { display: block; }
 main, .foot { position: relative; z-index: 1; }
 
 /* Single-column grids must not grow to fit wide content (it would overflow on phones). */
-.position__grid, .split-head, .pillars, .criteria, .disc__grid, .std, .partners__grid, .anatomy,
+.position__grid, .split-head, .pillars, .criteria, .std, .partners__grid, .anatomy,
 .faq__grid, .apply__grid, .foot__in { grid-template-columns: minmax(0, 1fr); }
 
 /* ---------- Structural guides (fixed, behind everything) ---------- */
@@ -536,30 +536,36 @@ html:not(.js) .burger { display: none; } /* the menu needs JS; without it the pa
   .criteria__list p { grid-column: auto; }
 }
 
-/* ---------- 03 Disciplines ---------- */
-.disc__grid { display: grid; gap: clamp(2.5rem, 6vw, 5rem); }
-.disc__fig { width: 100%; max-width: 34rem; aspect-ratio: 1; margin-inline: auto; }
-.disc__fig:empty { display: none; }
-.disc__fig svg { width: 100%; height: 100%; overflow: visible; }
-.disc__main .h2 { margin-bottom: 1.5rem; }
-.disc__main .lead { margin-bottom: clamp(2rem, 4vw, 3.5rem); }
-@media (min-width: 1024px) {
-  .disc__grid { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: var(--col); align-items: start; }
-  .disc__fig { position: sticky; top: calc(var(--nav-h) + 2.5rem); max-width: none; }
+/* ---------- 03 Management: one statement, nothing itemised ---------- */
+.mgmt__stage { display: grid; justify-items: center; gap: clamp(1.5rem, 3vw, 2.25rem); text-align: center; }
+.mgmt__fig { position: relative; width: min(100%, clamp(15rem, 24vw, 22rem)); aspect-ratio: 1; }
+.mgmt__fig:empty { display: none; }
+.mgmt__fig svg { width: 100%; height: 100%; overflow: visible; }
+.mgmt__title { font-size: clamp(2.5rem, 6.4vw, 6.75rem); }
+.mgmt__lead { max-width: 33em; }
+.mgmt__cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .75rem 1.75rem; margin-top: .5rem; }
+
+/* The figure: four arms drawn in once towards a single node, then still. */
+.xd-line {
+  fill: none; stroke-width: 1.3;
+  stroke-dasharray: var(--len); stroke-dashoffset: var(--len);
+  transition: stroke-dashoffset 1.5s var(--ease) calc(var(--a, 0) * 150ms + var(--j, 0) * 32ms + 150ms);
 }
-
-.xd-arm line { stroke-width: 1; vector-effect: non-scaling-stroke; opacity: .22; transition: opacity .8s var(--ease); }
-.xd-arm.is-on line { opacity: 1; }
-.is-neutral .xd-arm line { opacity: .6; }
-.xd-node { fill: var(--white); opacity: 0; transition: opacity .5s var(--ease); }
-.xd-arm.is-on .xd-node { opacity: 1; transition-delay: calc(var(--n, 0) * 90ms + 120ms); }
-.xd-label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; fill: var(--dim); transition: fill .6s var(--ease); }
-.xd-arm.is-on .xd-label, .is-neutral .xd-label { fill: var(--white); }
-.xd-core { fill: none; stroke: var(--white); stroke-width: 1; vector-effect: non-scaling-stroke; }
-.xd-orbit { fill: none; stroke: var(--line-3); stroke-width: 1; stroke-dasharray: 1 5; vector-effect: non-scaling-stroke; }
+.mgmt__fig.in .xd-line { stroke-dashoffset: 0; }
+.xd-orbit { fill: none; stroke: var(--line-3); stroke-width: 1.3; stroke-dasharray: 1.5 6; }
+.xd-core { fill: none; stroke: var(--white); stroke-width: 1.3; }
 .xd-dot { fill: var(--white); }
+.mgmt__you {
+  position: absolute; left: 50%; top: 60.4%; transform: translate(-50%, -50%);
+  font-family: var(--mono); font-size: .6875rem; letter-spacing: .22em; text-indent: .22em; text-transform: uppercase;
+  color: var(--white);
+}
+/* The drawing is scaled down on phones, so thicken its strokes to keep them near one pixel. */
+@media (max-width: 767px) { .xd-line, .xd-orbit, .xd-core { stroke-width: 2.1; } }
+.xd-orbit, .xd-core, .xd-dot, .mgmt__you { opacity: 0; transition: opacity 1s var(--ease) 1s; }
+.mgmt__fig.in :is(.xd-orbit, .xd-core, .xd-dot, .mgmt__you) { opacity: 1; }
 
-/* ---------- Accordion (disciplines and questions) ---------- */
+/* ---------- Accordion (questions) ---------- */
 .acc { border-top: 1px solid var(--line-2); }
 .acc__item { border-bottom: 1px solid var(--line-2); }
 .acc__btn {
@@ -567,7 +573,6 @@ html:not(.js) .burger { display: none; } /* the menu needs JS; without it the pa
   display: flex; align-items: center; gap: 1.25rem;
   padding-block: 1.4rem; text-align: left;
 }
-.acc__n { width: 2rem; flex: none; }
 .acc__t {
   flex: 1;
   font-size: clamp(1.25rem, 2vw, 1.75rem); font-weight: 300; letter-spacing: -.012em; line-height: 1.2;
@@ -587,13 +592,6 @@ html:not(.js) .burger { display: none; } /* the menu needs JS; without it the pa
 .js .is-open > .acc__panel { grid-template-rows: 1fr; }
 .js .is-open > .acc__panel > .acc__in { visibility: visible; transition-delay: 0s; }
 .acc__in p { color: var(--mute); max-width: 38em; padding-bottom: 1.5rem; }
-.acc--disc .acc__in { padding-left: 3.25rem; }
-.chips { display: flex; flex-wrap: wrap; gap: .5rem; padding-bottom: 1.75rem; }
-.chips li {
-  padding: .5rem .85rem; border: 1px solid var(--line-2); border-radius: 999px;
-  font-family: var(--mono); font-size: .75rem; letter-spacing: .04em; text-transform: uppercase; line-height: 1.2;
-  color: var(--paper);
-}
 
 /* ---------- 04 Process ---------- */
 .process { position: relative; }

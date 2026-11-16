@@ -417,8 +417,9 @@
     }
   }
 
-  /* ---------- Disciplines figure: four arms, one node ---------- */
-  let setArm = () => {};
+  /* ---------- Management figure: four arms drawn in towards one node ----------
+     Built here so the page has no empty box when JavaScript is off. The lines
+     start undrawn; CSS draws them once when the figure scrolls into view. */
   function xdiagram() {
     const fig = $('[data-xdiagram]');
     if (!fig) return;
@@ -430,90 +431,64 @@
       return node;
     };
 
-    const S = 600, c = S / 2, r0 = 46, r1 = 282, lines = 7, gap = 9, k = Math.SQRT1_2;
+    const S = 600, c = S / 2, r0 = 84, r1 = 290, lines = 9, gap = 8, k = Math.SQRT1_2;
+    const len = r1 - r0;
     const svg = make('svg', { viewBox: '0 0 ' + S + ' ' + S, focusable: 'false' });
     const defs = make('defs', {}, svg);
-    const arms = [['01', 'Brand', -1, -1], ['02', 'Content', 1, -1], ['03', 'Audience', -1, 1], ['04', 'Commerce', 1, 1]];
 
-    make('circle', { class: 'xd-orbit', cx: c, cy: c, r: 26 }, svg);
-
-    const groups = arms.map(([num, label, sx, sy], i) => {
-      const g = make('g', { class: 'xd-arm' }, svg);
-      const dx = sx * k, dy = sy * k;      // along the arm
-      const nx = -dy, ny = dx;             // across it
+    // Clockwise from the top-left arm
+    [[-1, -1], [1, -1], [1, 1], [-1, 1]].forEach(([sx, sy], a) => {
+      const dx = sx * k, dy = sy * k;   // along the arm
+      const nx = -dy, ny = dx;          // across it
       const grad = make('linearGradient', {
-        id: 'xd-grad-' + i, gradientUnits: 'userSpaceOnUse',
+        id: 'xd-grad-' + a, gradientUnits: 'userSpaceOnUse',
         x1: c + dx * r0, y1: c + dy * r0, x2: c + dx * r1, y2: c + dy * r1
       }, defs);
       make('stop', { offset: '0', 'stop-color': '#fff', 'stop-opacity': '1' }, grad);
-      make('stop', { offset: '.65', 'stop-color': '#d6dade', 'stop-opacity': '.7' }, grad);
+      make('stop', { offset: '.6', 'stop-color': '#d6dade', 'stop-opacity': '.7' }, grad);
       make('stop', { offset: '1', 'stop-color': '#c4c8ce', 'stop-opacity': '0' }, grad);
 
       for (let j = 0; j < lines; j++) {
         const d = (j - (lines - 1) / 2) * gap;
-        make('line', {
-          x1: (c + dx * r0 + nx * d).toFixed(2), y1: (c + dy * r0 + ny * d).toFixed(2),
-          x2: (c + dx * r1 + nx * d).toFixed(2), y2: (c + dy * r1 + ny * d).toFixed(2),
-          stroke: 'url(#xd-grad-' + i + ')'
-        }, g);
+        // Each line runs from the outer tip to the node, so it draws inwards.
+        const line = make('path', {
+          class: 'xd-line',
+          d: 'M' + (c + dx * r1 + nx * d).toFixed(2) + ' ' + (c + dy * r1 + ny * d).toFixed(2) +
+             'L' + (c + dx * r0 + nx * d).toFixed(2) + ' ' + (c + dy * r0 + ny * d).toFixed(2),
+          stroke: 'url(#xd-grad-' + a + ')'
+        }, svg);
+        line.style.setProperty('--len', len);
+        line.style.setProperty('--a', a);
+        line.style.setProperty('--j', Math.abs(j - (lines - 1) / 2));
       }
-      [0.2, 0.36, 0.52, 0.68].forEach((t, n) => {
-        const r = r0 + (r1 - r0) * t;
-        const dot = make('circle', { class: 'xd-node', cx: (c + dx * r).toFixed(2), cy: (c + dy * r).toFixed(2), r: 3 }, g);
-        dot.style.setProperty('--n', n);
-      });
-      const text = make('text', {
-        class: 'xd-label',
-        x: (c + dx * (r1 + 20)).toFixed(1), y: (c + dy * (r1 + 20) + (sy > 0 ? 12 : 0)).toFixed(1),
-        'text-anchor': sx > 0 ? 'end' : 'start'
-      }, g);
-      text.textContent = num + '  ' + label;
-      return g;
     });
 
-    make('circle', { class: 'xd-core', cx: c, cy: c, r: 9 }, svg);
-    make('circle', { class: 'xd-dot', cx: c, cy: c, r: 2 }, svg);
+    make('circle', { class: 'xd-orbit', cx: c, cy: c, r: 44 }, svg);
+    make('circle', { class: 'xd-core', cx: c, cy: c, r: 11 }, svg);
+    make('circle', { class: 'xd-dot', cx: c, cy: c, r: 2.4 }, svg);
     fig.appendChild(svg);
 
-    setArm = (index) => {
-      const none = index == null || index < 0;
-      svg.classList.toggle('is-neutral', none);
-      groups.forEach((g, i) => g.classList.toggle('is-on', !none && i === index));
-    };
+    const you = document.createElement('span');
+    you.className = 'mgmt__you';
+    you.textContent = 'You';
+    fig.appendChild(you);
   }
 
   /* ---------- Accordions ---------- */
   function accordions() {
     $$('[data-acc]').forEach((acc) => {
       const items = $$('.acc__item', acc);
-      const drivesArms = acc.hasAttribute('data-arms-target');
-      const openIndex = () => {
-        const open = items.find((item) => item.classList.contains('is-open'));
-        return open && open.dataset.arm != null ? Number(open.dataset.arm) : -1;
-      };
       const toggle = (item, open) => {
         item.classList.toggle('is-open', open);
         $('.acc__btn', item).setAttribute('aria-expanded', String(open));
       };
-
       items.forEach((item) => {
-        const button = $('.acc__btn', item);
-        button.addEventListener('click', () => {
+        $('.acc__btn', item).addEventListener('click', () => {
           const wasOpen = item.classList.contains('is-open');
           items.forEach((other) => toggle(other, false));
           toggle(item, !wasOpen);
-          if (drivesArms) setArm(openIndex());
         });
-        if (drivesArms) {
-          const preview = () => setArm(Number(item.dataset.arm));
-          const restore = () => setArm(openIndex());
-          button.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') preview(); });
-          button.addEventListener('pointerleave', restore);
-          button.addEventListener('focus', preview);
-          button.addEventListener('blur', restore);
-        }
       });
-      if (drivesArms) setArm(openIndex());
     });
   }
 
