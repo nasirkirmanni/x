@@ -790,49 +790,17 @@
     });
   }
 
-  /* ---------- Process: pinned horizontal chapters on wide, tall screens ---------- */
-  function processTrack() {
-    const section = $('[data-process]');
-    if (!section) return;
-    const track = $('[data-track]', section);
-    const view = $('.process__view', section);
-    const bar = $('[data-bar]', section);
-    const chapters = $$('.chapter', section);
-    const marks = $$('[data-marks] li', section);
-    const mq = window.matchMedia('(min-width: 1024px) and (min-height: 640px) and (prefers-reduced-motion: no-preference)');
-    let pinned = false;
-    let travel = 0;
-
-    const measure = () => {
-      pinned = mq.matches;
-      section.classList.toggle('is-pinned', pinned);
-      if (!pinned) {
-        section.style.removeProperty('--travel');
-        track.style.removeProperty('--tx');
-        chapters.forEach((ch) => ch.classList.add('is-active'));
-        return;
-      }
-      travel = Math.max(0, track.scrollWidth - view.clientWidth);
-      section.style.setProperty('--travel', travel + 'px');
-    };
-
-    const update = () => {
-      if (!pinned) return;
-      const top = section.getBoundingClientRect().top;
-      const p = travel > 0 ? clamp(-top / travel) : 0;
-      track.style.setProperty('--tx', (-p * travel).toFixed(1) + 'px');
-      if (bar) bar.style.setProperty('--p', p.toFixed(4));
-      const index = Math.round(p * (chapters.length - 1));
-      chapters.forEach((ch, i) => ch.classList.toggle('is-active', i === index));
-      marks.forEach((m, i) => m.classList.toggle('is-active', i === index));
-    };
-
-    measure();
-    resizeFns.push(measure);
-    scrollFns.push(update);
-    mq.addEventListener('change', () => { measure(); requestScroll(); });
-    window.addEventListener('load', () => { measure(); requestScroll(); });
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { measure(); requestScroll(); });
+  /* ---------- Process: the ruled line draws once, when most of it is in view ---------- */
+  function steps() {
+    const list = $('[data-steps]');
+    if (!list) return;
+    if (!('IntersectionObserver' in window)) { list.classList.add('is-drawn'); return; }
+    const io = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      list.classList.add('is-drawn');
+      io.disconnect();
+    }, { threshold: 0.6 });
+    io.observe(list);
   }
 
   /* ---------- Application form ---------- */
@@ -1007,7 +975,7 @@
   xdiagram();
   accordions();
   pillars();
-  processTrack();
+  steps();
   applyForm();
   cursor();
   magnetic();

@@ -793,76 +793,82 @@ a.card:focus-visible .card__media img { filter: grayscale(1) contrast(1.06) brig
 .js .is-open > .acc__panel > .acc__in { visibility: visible; transition-delay: 0s; }
 .acc__in p { color: var(--mute); max-width: 38em; padding-bottom: 1.5rem; }
 
-/* ---------- 04 Process ---------- */
-.process { position: relative; }
-.process__sticky { padding-block: var(--pad-top) var(--pad); }
-.process__head .h2 { margin-bottom: clamp(2.5rem, 5vw, 4rem); }
-.process__track { display: grid; }
-.chapter {
-  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.25rem 1.5rem;
-  padding: 2rem var(--gutter);
-  border-top: 1px solid var(--line-2);
-}
-.chapter:last-child { border-bottom: 1px solid var(--line-2); }
-.chapter__num {
-  min-width: 1.5em;
-  font-family: var(--serif); font-style: italic; font-weight: 200;
-  font-size: clamp(3rem, 9vw, 4.5rem); line-height: .85;
-  color: var(--white);
-}
-.chapter__body { display: grid; gap: .75rem; }
-.chapter h3 { font-family: var(--serif); font-weight: 300; font-size: clamp(1.75rem, 3vw, 2.75rem); line-height: 1.05; letter-spacing: -.015em; color: var(--white); }
-.chapter__body > p:not(.tag) { color: var(--mute); max-width: 30em; }
-.chapter__body > .chapter__out {
-  display: flex; flex-wrap: wrap; align-items: baseline; gap: .35rem 1rem;
-  margin-top: .5rem; padding-top: 1rem; border-top: 1px solid var(--line);
-  color: var(--paper);
-}
-.process__foot { display: none; }
+/* ---------- 04 Process: four steps on one ruled line ----------
+   On wide screens the steps stand on the page's own four guide lines. When most of the
+   figure is in view the line draws once, left to right, and each step lights as the line
+   reaches it. On a phone the steps stack, and each row's rule gets a short white lead-in. */
+.process__title { margin-bottom: clamp(2.5rem, 5vw, 4.5rem); }
 
-/* Pinned, horizontal mode. The class is set by JS on wide, tall, motion-safe viewports. */
-.process.is-pinned { height: calc(100vh + var(--travel, 0px)); }
-.is-pinned .process__sticky {
-  position: sticky; top: 0; height: 100vh; overflow: clip;
-  display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto;
-  padding-block: calc(var(--nav-h) + clamp(1.25rem, 4vh, 3.25rem)) clamp(1.25rem, 3vh, 2.25rem);
+.steps { display: grid; grid-template-columns: minmax(0, 1fr); border-bottom: 1px solid var(--line-2); }
+.step {
+  --t0: 0ms; --dur: 420ms;   /* when the line reaches this step, and how long it takes to cross it */
+  display: grid; grid-template-columns: 3.75rem minmax(0, 1fr); align-items: baseline;
 }
-.is-pinned .process__head .sec-head { margin-bottom: clamp(1rem, 3vh, 2.5rem); }
-.is-pinned .process__head .h2 { margin-bottom: 0; font-size: clamp(2.25rem, min(5vw, 8.4vh), 5.25rem); }
-.is-pinned .process__view { display: flex; align-items: center; min-width: 0; min-height: 0; }
-.is-pinned .process__track {
-  display: flex; width: max-content;
-  padding-inline: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
-  transform: translate3d(var(--tx, 0px), 0, 0);
-  will-change: transform;
+.step:nth-child(2) { --t0: 420ms; --dur: 460ms; }
+.step:nth-child(3) { --t0: 880ms; --dur: 520ms; }
+.step:nth-child(4) { --t0: 1400ms; --dur: 720ms; }
+
+.step__rule { position: relative; grid-area: 1 / 1 / 2 / -1; display: block; height: 1px; background: var(--line-2); }
+.step__rule::before {
+  content: ""; position: absolute; left: 0; top: 0; width: 2.5rem; height: 1px; background: var(--white);
+  transform-origin: left; transition: transform var(--dur) linear calc(var(--t0) + 200ms);
 }
-.is-pinned .chapter {
-  flex: none; width: clamp(27rem, 40vw, 40rem);
-  grid-template-columns: minmax(0, 1fr); align-content: start; gap: clamp(.9rem, 2.4vh, 1.5rem);
-  padding: 0 clamp(2rem, 4vw, 4.5rem) 0 clamp(1.25rem, 2vw, 2rem);
-  border: 0; border-left: 1px solid var(--line-2);
-  opacity: .34;
-  transition: opacity .8s var(--ease);
+.step:last-child .step__rule::before { transition-timing-function: cubic-bezier(.2, .7, .3, 1); }
+.step__end { display: none; }
+
+.step__n {
+  grid-area: 2 / 1; padding-block: 1.3rem; padding-inline: .04em .18em; justify-self: start;
+  font-family: var(--serif); font-style: italic; font-weight: 200; font-size: 2rem; line-height: 1;
+  letter-spacing: -.045em;
+  background: linear-gradient(180deg, #fff 18%, #8f949c 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
 }
-.is-pinned .chapter.is-active { opacity: 1; }
-.is-pinned .chapter__num { font-size: clamp(4rem, 14vh, 9.5rem); }
-.is-pinned .process__foot { display: block; }
-.process__marks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.process__marks li {
-  position: relative; padding: 0 .75rem .8rem 0;
-  font-family: var(--mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase;
-  color: var(--dim);
-  transition: color .5s var(--ease);
+.step__t {
+  grid-area: 2 / 2; padding-block: 1.3rem;
+  font-family: var(--serif); font-weight: 300; font-size: clamp(1.625rem, 6.6vw, 2rem);
+  line-height: 1.1; letter-spacing: -.015em; color: var(--white);
 }
-.process__marks li::after {
-  content: ""; position: absolute; left: 0; bottom: 0; width: 1px; height: .45rem; background: var(--line-3);
-  transition: height .5s var(--ease), background-color .5s var(--ease);
+.step__n, .step__t { transition: opacity .9s var(--ease) calc(var(--t0) + 200ms); }
+.step__t a { display: inline-flex; align-items: center; gap: .45em; padding-block: .6rem; margin-block: -.6rem; }
+.step__t a svg {
+  flex: none; width: .5em; height: .5em; color: var(--mute);
+  transition: transform .55s var(--ease), color var(--t-fast);
 }
-.process__marks span { margin-right: .9em; }
-.process__marks .is-active { color: var(--white); }
-.process__marks .is-active::after { height: .9rem; background: var(--white); }
-.process__bar { position: relative; display: block; height: 1px; background: var(--line-2); }
-.process__bar i { position: absolute; inset: 0; background: var(--white); transform: scaleX(var(--p, 0)); transform-origin: left; }
+.step__t a:hover svg, .step__t a:focus-visible svg { transform: translateX(.22em); color: var(--white); }
+
+@media (min-width: 768px) {
+  .steps { grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 0; }
+  .step { display: flex; flex-direction: column; align-items: flex-start; }
+  .step__n {
+    padding-block: 0 clamp(1rem, 1.7vw, 1.6rem);
+    font-size: clamp(3.75rem, 8vw, 8.5rem); line-height: .8;
+  }
+  .step__rule { align-self: stretch; flex: none; }
+  .step__rule::before { width: 100%; }
+  /* A tick hangs from the line at the start of each step. */
+  .step__rule::after {
+    content: ""; position: absolute; left: 0; top: 0; width: 1px; height: .95rem; background: var(--white);
+    transform-origin: top; transition: transform .7s var(--ease) calc(var(--t0) + 200ms), opacity .7s var(--ease) calc(var(--t0) + 200ms);
+  }
+  /* The line ends in the mark. */
+  .step__end {
+    display: block; position: absolute; right: 0; top: 50%; z-index: 1; box-sizing: content-box;
+    width: 1.375rem; height: 1.375rem; padding-left: .7rem; margin-top: -.6875rem;
+    background: var(--black); color: var(--white);
+    transition: opacity .8s var(--ease) calc(var(--t0) + var(--dur) + 100ms);
+  }
+  .step__t { padding-block: clamp(1.5rem, 2.1vw, 2rem) 0; padding-right: .75rem; font-size: clamp(1.375rem, 2.4vw, 2.5rem); }
+}
+
+/* Before the line has drawn: steps are dim and the line is plain. Skipped without JavaScript,
+   and for anyone who has asked for reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .js .steps:not(.is-drawn) .step__rule::before { transform: scaleX(0); }
+  .js .steps:not(.is-drawn) .step__rule::after { transform: scaleY(.45); opacity: .4; }
+  .js .steps:not(.is-drawn) .step__n { opacity: .22; }
+  .js .steps:not(.is-drawn) .step__t { opacity: .38; }
+  .js .steps:not(.is-drawn) .step__end { opacity: .3; }
+}
 
 /* ---------- 05 Standard ---------- */
 .std { display: grid; gap: clamp(3rem, 6vw, 5rem); }
