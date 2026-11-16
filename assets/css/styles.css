@@ -569,67 +569,62 @@ a.card:focus-visible .card__media img { filter: grayscale(1) contrast(1.06) brig
 }
 
 /* ---------- 02 Talent ----------
-   An index of the three kinds of people we represent: one row each, the name set large and
-   a single line beside it. With a mouse, the row under the pointer lights up while the
-   others step back; its name eases right, the mark turns and a line draws along the row. */
-.roster { border-top: 1px solid var(--line-2); }
-.roster__row {
-  position: relative;
-  display: grid; grid-template-columns: 2.5rem minmax(0, 1fr) auto; align-items: center;
-  column-gap: 1rem; row-gap: .5rem;
-  padding-block: 1.5rem;
-  border-bottom: 1px solid var(--line-2);
-}
-.roster__row::after {
-  content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px;
-  background: var(--white); transform: scaleX(0); transform-origin: left;
-  transition: transform .9s var(--ease);
-}
-.roster__n { font-size: var(--fs-small); font-variant-numeric: tabular-nums; color: var(--dim); }
-.roster__t {
-  font-size: clamp(1.875rem, 2.6vw + .5rem, 3rem); font-weight: 300; line-height: 1.05; letter-spacing: -.032em;
-  color: var(--white);
-  transition: color .5s var(--ease), transform .7s var(--ease);
-}
-.roster__d { grid-column: 2 / -1; font-size: .9375rem; line-height: 1.6; color: var(--mute); max-width: 32em; transition: color .5s var(--ease); }
-.roster__x { grid-column: 3; grid-row: 1; width: 1.125rem; height: 1.125rem; color: var(--dim); transition: transform .9s var(--ease), color .5s var(--ease); }
-@media (min-width: 900px) {
-  .roster__row { grid-template-columns: 4rem minmax(0, 5fr) minmax(0, 6fr) 2.5rem; column-gap: 1.5rem; padding-block: 2.1rem; }
-  .roster__d { grid-column: 3; grid-row: 1; }
-  .roster__x { grid-column: 4; justify-self: end; }
-}
-@media (hover: hover) and (pointer: fine) {
-  .roster:hover .roster__t, .roster:hover .roster__d { color: var(--dim); }
-  .roster__row:hover .roster__t { color: var(--white); transform: translateX(.5rem); }
-  .roster__row:hover .roster__d { color: var(--paper); }
-  .roster__row:hover .roster__x { color: var(--white); transform: rotate(90deg); }
-  .roster__row:hover::after { transform: none; }
+   One large triangle, centred. Its corners are the three kinds of people we represent, each
+   named beside its corner, and they meet at the X in the middle: nested triangles close in,
+   signals travel inward and a slow ripple moves out. The corners take turns lighting up while
+   the section is on screen, and pointing at a corner's text lights it (tri() in main.js). */
+.talent__head { display: grid; justify-items: center; gap: 1.1rem; text-align: center; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+.talent__head .lead { max-width: 34em; }
+
+.tri-stage { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; }
+.tri { order: -1; width: 100%; max-width: 30rem; margin-bottom: 1.5rem; color: var(--white); }
+.tri svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+.corner { width: 100%; display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); column-gap: .75rem; row-gap: .35rem; padding-block: 1.25rem; border-top: 1px solid var(--line-2); }
+.corner__n { grid-row: 1 / span 2; padding-top: .45rem; font-size: var(--fs-small); font-variant-numeric: tabular-nums; color: var(--dim); transition: color .5s var(--ease); }
+.corner__t { font-size: clamp(1.625rem, 1.6vw + .9rem, 2.375rem); font-weight: 300; line-height: 1.08; letter-spacing: -.03em; color: var(--white); transition: color .5s var(--ease); }
+.corner__d { font-size: .9375rem; line-height: 1.6; color: var(--mute); max-width: 26em; transition: color .5s var(--ease); }
+
+@media (min-width: 1024px) {
+  /* The triangle in the middle column; the apex corner's text above it, the other two
+     beside the base corners. */
+  .tri-stage {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 38rem) minmax(0, 1fr);
+    grid-template-rows: auto auto; column-gap: 2rem; row-gap: 1.25rem; align-items: end;
+  }
+  .tri { order: 0; grid-column: 2; grid-row: 2; max-width: none; margin-bottom: 0; }
+  .corner { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: .4rem; padding: 0; border: 0; }
+  .corner__n { grid-row: auto; padding-top: 0; }
+  .corner--0 { grid-column: 2; grid-row: 1; justify-self: center; justify-items: center; max-width: 27rem; text-align: center; }
+  .corner--1 { grid-column: 1; grid-row: 2; justify-self: end; justify-items: end; max-width: 17rem; margin-bottom: 1.25rem; text-align: right; }
+  .corner--2 { grid-column: 3; grid-row: 2; justify-self: start; justify-items: start; max-width: 17rem; margin-bottom: 1.25rem; text-align: left; }
 }
 
-/* The triangle beside the heading: the three kinds of people we represent as its corners,
-   nested triangles closing in on the X in the middle, signals travelling inward and a slow
-   ripple outward. It draws itself in when it scrolls into view. Hovering a row in the list
-   lights its corner (tri() in main.js). */
-.talent__head { align-items: center; }
-.talent__intro { display: grid; gap: 1.25rem; justify-items: start; }
-.tri { width: 100%; max-width: 26rem; justify-self: center; color: var(--white); }
-@media (min-width: 1024px) { .tri { justify-self: end; } }
-.tri svg { display: block; width: 100%; height: auto; overflow: visible; }
-.tri__label { font-family: var(--font); font-size: 15px; font-weight: 500; letter-spacing: -.01em; fill: var(--paper); stroke: none; opacity: .75; transition: opacity .5s var(--ease); }
-.tri__arm { stroke-opacity: .4; transition: stroke-opacity .5s var(--ease); }
-.tri__node { fill: var(--black); transition: fill .5s var(--ease); }
+/* The drawing. */
+.tri__arm { stroke-opacity: .35; transition: stroke-opacity .6s var(--ease); }
+.tri__node { fill: var(--black); transition: fill .6s var(--ease); }
 .tri__core { fill: var(--black); }
-.tri__ripple { opacity: 0; vector-effect: non-scaling-stroke; transform-origin: 220px 216px; }
+.tri__num { font-family: var(--font); font-size: 13px; font-weight: 500; letter-spacing: 0; fill: var(--dim); stroke: none; transition: fill .6s var(--ease); }
+.tri__ripple { opacity: 0; vector-effect: non-scaling-stroke; transform-origin: 300px 312px; }
 .tri.in .tri__ripple { animation: tri-ripple 4.5s var(--ease-io) infinite; }
 @keyframes tri-ripple { 0% { transform: scale(1); opacity: .5; } 100% { transform: scale(3.33); opacity: 0; } }
-.tri__dot { opacity: 0; transition: opacity .6s var(--ease) 1.4s; }
+.tri__dot { opacity: 0; transition: opacity .6s var(--ease) 1.6s; }
 .tri.in .tri__dot { opacity: 1; }
 .js .tri .draw { stroke-dasharray: 1 1; stroke-dashoffset: 1; }
-.js .tri.in .draw { stroke-dashoffset: 0; transition: stroke-dashoffset 1.4s var(--ease) calc(var(--k, 0) * 90ms + .2s), stroke-opacity .5s var(--ease); }
-.tri[data-on] .tri__label { opacity: .35; }
-.tri[data-on="0"] .tri__label[data-v="0"], .tri[data-on="1"] .tri__label[data-v="1"], .tri[data-on="2"] .tri__label[data-v="2"] { opacity: 1; }
-.tri[data-on="0"] .tri__arm[data-v="0"], .tri[data-on="1"] .tri__arm[data-v="1"], .tri[data-on="2"] .tri__arm[data-v="2"] { stroke-opacity: 1; }
-.tri[data-on="0"] .tri__node[data-v="0"], .tri[data-on="1"] .tri__node[data-v="1"], .tri[data-on="2"] .tri__node[data-v="2"] { fill: var(--white); }
+.js .tri.in .draw { stroke-dashoffset: 0; transition: stroke-dashoffset 1.6s var(--ease) calc(var(--k, 0) * 90ms + .2s), stroke-opacity .6s var(--ease); }
+
+/* The lit corner: its text, its arm, its node and its number. */
+.tri-stage[data-on] .corner__t { color: var(--dim); }
+.tri-stage[data-on] .corner__d { color: var(--dim); }
+.tri-stage[data-on="0"] .corner--0 :is(.corner__t, .corner__n),
+.tri-stage[data-on="1"] .corner--1 :is(.corner__t, .corner__n),
+.tri-stage[data-on="2"] .corner--2 :is(.corner__t, .corner__n) { color: var(--white); }
+.tri-stage[data-on="0"] .corner--0 .corner__d,
+.tri-stage[data-on="1"] .corner--1 .corner__d,
+.tri-stage[data-on="2"] .corner--2 .corner__d { color: var(--paper); }
+.tri-stage[data-on="0"] .tri__arm[data-v="0"], .tri-stage[data-on="1"] .tri__arm[data-v="1"], .tri-stage[data-on="2"] .tri__arm[data-v="2"] { stroke-opacity: 1; }
+.tri-stage[data-on="0"] .tri__node[data-v="0"], .tri-stage[data-on="1"] .tri__node[data-v="1"], .tri-stage[data-on="2"] .tri__node[data-v="2"] { fill: var(--white); }
+.tri-stage[data-on="0"] .tri__num[data-v="0"], .tri-stage[data-on="1"] .tri__num[data-v="1"], .tri-stage[data-on="2"] .tri__num[data-v="2"] { fill: var(--white); }
 @media (prefers-reduced-motion: reduce) {
   .tri__ripple, .tri__dot { display: none; }
   .js .tri .draw { stroke-dashoffset: 0; }

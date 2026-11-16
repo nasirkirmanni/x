@@ -853,17 +853,45 @@
     }).observe(box);
   }
 
-  /* ---------- Talent triangle: hovering a row lights its corner ---------- */
+  /* ---------- Talent triangle: the corners take turns lighting up ----------
+     While the section is on screen the lit corner moves round, Technology, Fintech, Founders,
+     every 2.2 seconds. Pointing at a corner's text lights that corner and holds it; tapping
+     it lights it and the turns carry on from there. */
   function tri() {
-    const fig = $('[data-tri]');
-    const list = $('.roster');
-    if (!fig || !list) return;
-    $$('.roster__row', list).forEach((row, k) => {
-      row.addEventListener('pointerenter', () => { fig.dataset.on = String(k); });
+    const stage = $('[data-tri-stage]');
+    if (!stage) return;
+    const corners = $$('[data-corner]', stage);
+    const svg = $('svg', stage);
+    const N = 3, DUR = 2200;
+    let on = 0, timer = 0, visible = false, held = false;
+    const set = (k) => { on = k; stage.dataset.on = String(k); };
+    const schedule = () => {
+      clearTimeout(timer);
+      if (!visible || held || reduced()) return;
+      timer = setTimeout(() => { set((on + 1) % N); schedule(); }, DUR);
+    };
+    corners.forEach((c) => {
+      const k = Number(c.dataset.corner);
+      c.addEventListener('pointerenter', (e) => {
+        if (e.pointerType !== 'mouse') return;
+        held = true;
+        set(k);
+        clearTimeout(timer);
+      });
+      c.addEventListener('pointerleave', (e) => {
+        if (e.pointerType !== 'mouse') return;
+        held = false;
+        schedule();
+      });
+      c.addEventListener('click', () => { set(k); schedule(); });
     });
-    list.addEventListener('pointerleave', () => { delete fig.dataset.on; });
-    const svg = $('svg', fig);
-    if (reduced() && svg && svg.pauseAnimations) svg.pauseAnimations();
+    if (reduced()) { if (svg && svg.pauseAnimations) svg.pauseAnimations(); return; }
+    set(0);
+    if (!('IntersectionObserver' in window)) { visible = true; schedule(); return; }
+    new IntersectionObserver((entries) => {
+      visible = entries[0].isIntersecting;
+      schedule();
+    }, { threshold: 0.25 }).observe(stage);
   }
 
   /* ---------- Beliefs: each line lights up as it reaches the middle of the screen ----------
