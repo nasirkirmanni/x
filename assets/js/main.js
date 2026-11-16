@@ -778,6 +778,158 @@
     io.observe(list);
   }
 
+  /* ---------- Navigation glass ----------
+     A soft highlight follows the pointer across the bar. Chromium-based browsers can run
+     an SVG filter on what is behind an element, so there the bar also bends the page near
+     its edges, like the rim of a glass lens. Other browsers keep the plain glass. */
+  function glass() {
+    const bar = $('.nav__bar');
+    if (!bar) return;
+    if (mqFine.matches) {
+      bar.addEventListener('pointermove', (e) => {
+        const r = bar.getBoundingClientRect();
+        bar.style.setProperty('--gx', Math.round(e.clientX - r.left) + 'px');
+        bar.style.setProperty('--gy', Math.round(e.clientY - r.top) + 'px');
+        bar.classList.add('is-lit');
+      }, { passive: true });
+      bar.addEventListener('pointerleave', () => bar.classList.remove('is-lit'));
+    }
+
+    const brands = navigator.userAgentData && navigator.userAgentData.brands;
+    if (!brands || !brands.some((b) => /Chromium/i.test(b.brand))) return;
+
+    const NS = 'http://www.w3.org/2000/svg';
+    const make = (name, attrs, parent) => {
+      const node = document.createElementNS(NS, name);
+      Object.keys(attrs).forEach((key) => node.setAttribute(key, attrs[key]));
+      if (parent) parent.appendChild(node);
+      return node;
+    };
+    const svg = make('svg', { width: '0', height: '0', 'aria-hidden': 'true', focusable: 'false' });
+    svg.style.position = 'absolute';
+    const filter = make('filter', { id: 'nav-lens', x: '0', y: '0', width: '100%', height: '100%', 'color-interpolation-filters': 'sRGB' }, svg);
+    const map = make('feImage', { result: 'map', preserveAspectRatio: 'none' }, filter);
+    const shift = make('feDisplacementMap', { in: 'SourceGraphic', in2: 'map', xChannelSelector: 'R', yChannelSelector: 'G', scale: '0' }, filter);
+    document.body.appendChild(svg);
+
+    // The map says, for every pixel of the bar, where to look instead. Inside a rim near
+    // the edge it looks inwards, most strongly at the very edge; the middle is left clear.
+    const cv = document.createElement('canvas');
+    const ctx = cv.getContext('2d');
+    let lastW = 0, lastH = 0;
+    const build = () => {
+      const w = Math.round(bar.offsetWidth);
+      const h = Math.round(bar.offsetHeight);
+      if (!w || !h || (w === lastW && h === lastH)) return;
+      lastW = w; lastH = h;
+      cv.width = w; cv.height = h;
+      const img = ctx.createImageData(w, h);
+      const d = img.data;
+      const hw = w / 2, hh = h / 2, r = hh;
+      const rim = Math.min(r, 16);
+      for (let j = 0; j < h; j++) {
+        for (let i = 0; i < w; i++) {
+          const px = i + 0.5 - hw, py = j + 0.5 - hh;
+          const qx = Math.abs(px) - (hw - r), qy = Math.abs(py) - (hh - r);
+          // Signed distance to the pill's outline: negative inside.
+          const sd = Math.hypot(Math.max(qx, 0), Math.max(qy, 0)) + Math.min(Math.max(qx, qy), 0) - r;
+          const depth = -sd;
+          let nx = 0, ny = 0;
+          if (qx > 0 && qy > 0) { const l = Math.hypot(qx, qy); nx = qx / l; ny = qy / l; }
+          else if (qx > qy) nx = 1;
+          else ny = 1;
+          nx *= px < 0 ? -1 : 1;
+          ny *= py < 0 ? -1 : 1;
+          const t = depth > 0 && depth < rim ? Math.pow(1 - depth / rim, 2) : 0;
+          const k = (j * w + i) * 4;
+          d[k] = 128 - nx * t * 127;
+          d[k + 1] = 128 - ny * t * 127;
+          d[k + 2] = 128;
+          d[k + 3] = 255;
+        }
+      }
+      ctx.putImageData(img, 0, 0);
+      map.setAttribute('href', cv.toDataURL());
+      map.setAttribute('width', String(w));
+      map.setAttribute('height', String(h));
+      shift.setAttribute('scale', '32');   // the largest shift is half of this, in pixels
+      root.classList.add('has-lens');
+    };
+    build();
+    if ('ResizeObserver' in window) new ResizeObserver(build).observe(bar);
+    else resizeFns.push(build);
+  }
+
+  /* ---------- Footer word: letters rise out of the page's edge, then a light moves across them ----------
+     Two identical layers of letters: a dim one, and a white one that only shows inside a
+     soft circle of light. The light drifts on its own, and follows the pointer while the
+     pointer is over the footer. */
+  function footWord() {
+    const el = $('[data-footword]');
+    if (!el) return;
+    const text = el.textContent.trim();
+    const layer = (cls) => {
+      const wrap = document.createElement('span');
+      wrap.className = cls;
+      Array.from(text).forEach((ch, i) => {
+        const c = document.createElement('span');
+        c.className = 'fw__ch';
+        c.textContent = ch;
+        c.style.setProperty('--i', i);
+        wrap.appendChild(c);
+      });
+      return wrap;
+    };
+    el.textContent = '';
+    el.append(layer('fw__base'), layer('fw__lit'));
+
+    let visible = false, hover = false, raf = 0;
+    let x = 0.5, y = 0.6, tx = x, ty = y;
+    const t0 = performance.now();
+    const paint = () => {
+      el.style.setProperty('--fx', (x * 100).toFixed(2) + '%');
+      el.style.setProperty('--fy', (y * 100).toFixed(2) + '%');
+    };
+    const frame = (now) => {
+      raf = 0;
+      if (!hover) {
+        const t = (now - t0) / 1000;
+        tx = 0.5 + 0.47 * Math.sin(t * 0.35);
+        ty = 0.6 + 0.1 * Math.sin(t * 0.83);
+      }
+      const k = hover ? 0.14 : 0.06;
+      x += (tx - x) * k;
+      y += (ty - y) * k;
+      paint();
+      if (visible && !document.hidden && !reduced()) raf = requestAnimationFrame(frame);
+    };
+    const play = () => {
+      if (!raf && visible && !document.hidden && !reduced()) raf = requestAnimationFrame(frame);
+    };
+    paint();
+
+    if (!('IntersectionObserver' in window)) { el.classList.add('in'); return; }
+    new IntersectionObserver((entries) => {
+      visible = entries[0].isIntersecting;
+      if (visible) el.classList.add('in');
+      play();
+    }, { threshold: 0.25 }).observe(el);
+    document.addEventListener('visibilitychange', play);
+
+    if (mqFine.matches) {
+      const area = el.closest('.foot') || el;
+      area.addEventListener('pointermove', (e) => {
+        if (e.pointerType !== 'mouse') return;
+        const r = el.getBoundingClientRect();
+        hover = true;
+        tx = (e.clientX - r.left) / r.width;
+        ty = (e.clientY - r.top) / r.height;
+        play();
+      }, { passive: true });
+      area.addEventListener('pointerleave', () => { hover = false; });
+    }
+  }
+
   /* ---------- Application form ---------- */
   function applyForm() {
     const form = $('[data-form]');
@@ -945,10 +1097,12 @@
   reveals();
   navigation();
   menu();
+  glass();
   xfield();
   xdiagram();
   accordions();
   steps();
+  footWord();
   applyForm();
   cursor();
   magnetic();

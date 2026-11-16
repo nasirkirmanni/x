@@ -214,22 +214,64 @@ main, .foot { position: relative; z-index: 1; }
   100% { transform: scaleX(1); transform-origin: left; }
 }
 
-/* ---------- Navigation: one floating bar ---------- */
+/* ---------- Navigation: one floating bar of liquid glass ----------
+   Every browser gets the glass itself: a light blur that keeps colour, a bright rim where
+   light catches the curve, and a soft highlight that follows the pointer. Chromium-based
+   browsers also bend what is behind the bar near its edges, like the rim of a lens
+   (glass() in main.js builds that filter and adds .has-lens). */
 .nav {
   position: fixed; inset: 0 0 auto 0; z-index: 50;
   padding-top: .75rem;
   pointer-events: none;
 }
 .nav__bar {
+  position: relative;
+  isolation: isolate;
   pointer-events: auto;
   display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 1rem;
   height: 3.25rem;
   padding: 0 .45rem 0 1.1rem;
-  border: 1px solid var(--line-2);
   border-radius: 999px;
-  background: rgba(16, 16, 16, .72);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
-  backdrop-filter: blur(16px) saturate(140%);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .09) 0%, rgba(255, 255, 255, .02) 52%, rgba(255, 255, 255, .05) 100%),
+    rgba(10, 10, 10, .42);
+  -webkit-backdrop-filter: blur(12px) saturate(180%) brightness(1.08);
+  backdrop-filter: blur(12px) saturate(180%) brightness(1.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .2),
+    inset 0 -1px 1px rgba(255, 255, 255, .06),
+    inset 0 0 20px rgba(255, 255, 255, .05),
+    0 12px 32px -8px rgba(0, 0, 0, .7),
+    0 0 0 .5px rgba(0, 0, 0, .8);
+}
+/* The rim: brightest where light would catch the curve, top left and bottom right. */
+.nav__bar::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  padding: 1px; border-radius: inherit;
+  background: linear-gradient(115deg, rgba(255, 255, 255, .55) 0%, rgba(255, 255, 255, .14) 16%, rgba(255, 255, 255, .05) 42%, rgba(255, 255, 255, .05) 62%, rgba(255, 255, 255, .16) 86%, rgba(255, 255, 255, .42) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+/* A soft highlight that follows the pointer (mouse only, set by JS). */
+.nav__bar::after {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(12rem circle at var(--gx, 50%) var(--gy, 0%), rgba(255, 255, 255, .11), transparent 65%);
+  opacity: 0; transition: opacity .5s var(--ease);
+  pointer-events: none;
+}
+.nav__bar.is-lit::after { opacity: 1; }
+/* With the lens the glass is a little clearer, so the bending at the rim can be seen, but
+   still frosted enough that text scrolling underneath never competes with the bar's own. */
+.has-lens .nav__bar {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .08) 0%, rgba(255, 255, 255, .02) 52%, rgba(255, 255, 255, .05) 100%),
+    rgba(10, 10, 10, .48);
+  -webkit-backdrop-filter: url(#nav-lens) blur(2.5px) saturate(160%) brightness(1.12);
+  backdrop-filter: url(#nav-lens) blur(2.5px) saturate(160%) brightness(1.12);
 }
 
 .brand { display: inline-flex; align-items: center; gap: .6rem; min-height: 2.75rem; justify-self: start; color: var(--white); }
@@ -387,7 +429,7 @@ html:not(.js) .burger { display: none; } /* the menu needs JS; without it the pa
 /* ---------- 01 Position ---------- */
 /* Words start grey and turn white as you read down (set by JS), as on terafab.ai. */
 .position .statement { max-width: 24em; }
-.statement .mw { transition: opacity .3s linear; }
+.statement .mw { transition: opacity 1.4s linear; }   /* each word takes 1.4s to light, trailing the scroll */
 .notes { display: grid; gap: 1.5rem; margin-top: clamp(2.5rem, 5vw, 4rem); }
 .notes li { padding-top: 1.1rem; border-top: 1px solid var(--line-2); }
 .notes__t { margin-bottom: .35rem; font-size: .9375rem; font-weight: 500; color: var(--white); }
@@ -879,7 +921,7 @@ a.card:focus-visible .card__media img { filter: grayscale(1) contrast(1.06) brig
 }
 
 /* ---------- Footer ---------- */
-.foot { display: flow-root; border-top: 1px solid var(--line); padding-block: clamp(3rem, 6vw, 4.5rem) clamp(2.5rem, 5vw, 3.5rem); }
+.foot { display: flow-root; overflow: clip; border-top: 1px solid var(--line); padding-top: clamp(3rem, 6vw, 4.5rem); }
 .foot__in { display: grid; gap: 2.5rem; }
 .foot__brand { display: grid; gap: .85rem; justify-items: start; }
 .foot__brand p { max-width: 24em; font-size: .875rem; color: var(--mute); }
@@ -889,6 +931,39 @@ a.card:focus-visible .card__media img { filter: grayscale(1) contrast(1.06) brig
 .foot__legal { display: grid; gap: .4rem; align-content: start; font-size: var(--fs-small); color: var(--dim); }
 @media (min-width: 900px) {
   .foot__in { grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 3fr); gap: 3rem; }
+}
+
+/* The word at the very end. It spans the content width, guide to guide, and its letters
+   stand on the page's bottom edge. When the footer comes into view the letters rise out of
+   that edge one by one; then a soft light drifts across them, and follows the pointer while
+   it is over the footer (footWord() in main.js). */
+.foot__end { container-type: inline-size; margin-top: clamp(3.5rem, 8vw, 7rem); }
+.foot__word {
+  position: relative;
+  margin-bottom: -.136em;   /* Inter's baseline sits .136em above the bottom of a line set solid */
+  font-size: 12vw;          /* for browsers without container units */
+  font-size: 15.5cqi;       /* the letters fill about 98% of the content width */
+  font-weight: 200; line-height: 1; letter-spacing: -.02em; text-transform: uppercase;
+  white-space: nowrap; color: #3a3a3a;
+  user-select: none;
+}
+.fw__base, .fw__lit { display: flex; justify-content: space-between; }
+.fw__ch { display: block; }
+.fw__base { color: #2e2e2e; }
+.fw__lit {
+  position: absolute; inset: 0;
+  color: var(--white);
+  -webkit-mask-image: radial-gradient(circle 18vw at var(--fx, 50%) var(--fy, 60%), #000 0%, rgba(0, 0, 0, .5) 38%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle 20cqi at var(--fx, 50%) var(--fy, 60%), #000 0%, rgba(0, 0, 0, .5) 38%, transparent 100%);
+  mask-image: radial-gradient(circle 18vw at var(--fx, 50%) var(--fy, 60%), #000 0%, rgba(0, 0, 0, .5) 38%, transparent 100%);
+  mask-image: radial-gradient(circle 20cqi at var(--fx, 50%) var(--fy, 60%), #000 0%, rgba(0, 0, 0, .5) 38%, transparent 100%);
+}
+.js .fw__ch { transform: translateY(105%); transition: transform 1.4s var(--ease) calc(var(--i, 0) * 60ms); }
+.js .foot__word.in .fw__ch { transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .fw__lit { display: none; }
+  .fw__base { color: #4a4a4a; }
+  .js .fw__ch { transform: none; }
 }
 
 /* ---------- Cursor (fine pointers only, enabled by JS) ---------- */
