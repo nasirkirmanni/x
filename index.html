@@ -15,7 +15,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@400..500&family=Newsreader:ital,opsz,wght@0,6..72,200..500;1,6..72,200..500&display=swap" rel="stylesheet">
+  <!-- One typeface for everything: Inter. Its optical-size axis gives the tighter display cut at large sizes. -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
 
   <script>document.documentElement.classList.add('js')</script>
@@ -45,38 +46,37 @@
     </defs>
   </svg>
 
-  <!-- Structural guide lines behind the whole page -->
-  <div class="guides" aria-hidden="true"><div class="guides__in"><i></i><i></i><i></i></div></div>
+  <!-- Dashed lines at the edges of the content, behind the whole page -->
+  <div class="guides" aria-hidden="true"><div class="guides__in"></div></div>
 
-  <!-- ============ Navigation ============ -->
+  <!-- ============ Navigation: one floating bar ============ -->
   <header class="nav" data-nav>
-    <div class="nav__in wrap">
-      <a class="brand" href="#top" aria-label="Back to top">
-        <svg class="mark" aria-hidden="true"><use href="#mark"/></svg>
-        <span class="brand__name" data-site="name"></span>
-        <span class="brand__desc">Tech &amp; Fintech Creators</span>
-      </a>
+    <div class="wrap">
+      <div class="nav__bar">
+        <a class="brand" href="#top" aria-label="Back to top">
+          <svg class="mark" aria-hidden="true"><use href="#mark"/></svg>
+          <span class="brand__name" data-site="name"></span>
+          <span class="brand__desc">Tech &amp; Fintech Creators</span>
+        </a>
 
-      <nav class="rnav" aria-label="Primary">
-        <ol class="rnav__list">
-          <li><a href="#position" data-spy="position">Position</a></li>
-          <li hidden data-wall-link><a href="#work" data-spy="work">Work</a></li>
-          <li><a href="#talent" data-spy="talent">Talent</a></li>
-          <li><a href="#management" data-spy="management">Management</a></li>
-          <li><a href="#process" data-spy="process">Process</a></li>
-          <li><a href="#standard" data-spy="standard">Standard</a></li>
-          <li><a href="#partners" data-spy="partners">Partners</a></li>
-        </ol>
-      </nav>
+        <nav class="rnav" aria-label="Primary">
+          <ol class="rnav__list">
+            <li hidden data-wall-link><a href="#work" data-spy="work">Work</a></li>
+            <li><a href="#talent" data-spy="talent">Talent</a></li>
+            <li><a href="#management" data-spy="management">Management</a></li>
+            <li><a href="#process" data-spy="process">Process</a></li>
+            <li><a href="#partners" data-spy="partners">Partners</a></li>
+          </ol>
+        </nav>
 
-      <div class="nav__end">
-        <a class="btn btn--sm" href="#apply" data-magnetic><span class="btn__label">Apply</span><svg class="btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-        <button class="burger" type="button" aria-expanded="false" aria-controls="menu" data-menu-toggle>
-          <span class="sr-only">Menu</span><i aria-hidden="true"></i><i aria-hidden="true"></i>
-        </button>
+        <div class="nav__end">
+          <a class="btn btn--sm" href="#apply"><span class="btn__label">Apply</span><svg class="btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <button class="burger" type="button" aria-expanded="false" aria-controls="menu" data-menu-toggle>
+            <span class="sr-only">Menu</span><i aria-hidden="true"></i><i aria-hidden="true"></i>
+          </button>
+        </div>
       </div>
     </div>
-    <div class="nav__rule" aria-hidden="true"><span class="nav__progress" data-progress></span></div>
   </header>
 
   <!-- Mobile menu -->
@@ -105,31 +105,17 @@
     <section class="hero" id="top" data-hero>
       <canvas class="hero__field" data-xfield aria-hidden="true"></canvas>
 
-      <p class="hero__fig tag" aria-hidden="true">Fig. 01 — Convergence</p>
-
       <div class="hero__content wrap">
-        <p class="status" data-intro><span class="status__dot" aria-hidden="true"></span>Founding roster — applications open</p>
+        <p class="status" data-intro><span class="status__dot" aria-hidden="true"></span>Founding roster, applications open</p>
 
-        <h1 class="display hero__title" data-split data-intro-title>
-          <span class="hl">Management</span>
-          <span class="hl">for the <em>voices</em></span>
-          <span class="hl">of tech &amp;</span>
-          <span class="hl">fintech.</span>
-        </h1>
+        <h1 class="display hero__title" data-split data-intro-title><span class="hl">Management for the voices</span> <span class="hl"><em>of tech &amp; fintech.</em></span></h1>
 
-        <div class="hero__foot">
-          <p class="hero__lede" data-intro>A management and representation agency for technology and fintech creators on X. We take on a small number of people, and we look after them fully.</p>
-          <div class="hero__cta" data-intro>
-            <a class="btn" href="#apply" data-magnetic><span class="btn__label">Apply for representation</span><svg class="btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-            <a class="link" href="#apply" data-apply="brand">Partnership enquiries</a>
-          </div>
+        <p class="hero__lede" data-intro>A management and representation agency for technology and fintech creators on X. We take on a small number of people, and we look after them fully.</p>
+
+        <div class="hero__cta" data-intro>
+          <a class="btn" href="#apply" data-magnetic><span class="btn__label">Apply for representation</span><svg class="btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn--ghost" href="#apply" data-apply="brand"><span class="btn__label">Partnership enquiries</span></a>
         </div>
-      </div>
-
-      <div class="hero__base wrap" aria-hidden="true" data-intro>
-        <span class="tag">Scroll</span>
-        <span class="ticks"></span>
-        <span class="tag">Management · Representation · By application</span>
       </div>
     </section>
 
@@ -137,13 +123,11 @@
     <section class="section position" id="position" data-section>
       <div class="wrap">
         <header class="sec-head" data-reveal>
-          <span class="tag">(01)</span><span class="tag tag--on">Position</span><span class="sec-head__rule"></span>
+          <span class="tag">01</span><span class="tag tag--on">Position</span><span class="sec-head__rule"></span>
         </header>
 
         <h2 class="sr-only">Our position</h2>
-        <div class="position__grid">
-          <p class="statement" data-words>The most valuable voices in technology and finance are not media companies. They are individuals — builders, founders and analysts — with audiences these industries cannot reach any other way. X is where they think out loud. We represent the people they listen to: properly, selectively, and for the long term.</p>
-        </div>
+        <p class="statement" data-words>The most valuable voices in technology and finance are not media companies. They are individuals — builders, founders and analysts — with audiences these industries cannot reach any other way. X is where they think out loud. We represent the people they listen to: properly, selectively, and for the long term.</p>
 
         <ul class="notes">
           <li data-reveal>
@@ -162,25 +146,13 @@
       </div>
     </section>
 
-    <!-- Oversized scroll-linked strip -->
-    <div class="strip" aria-hidden="true" data-strip>
-      <div class="strip__track">
-        <span>Managed</span><svg class="strip__x"><use href="#mark"/></svg>
-        <span class="is-dim">Represented</span><svg class="strip__x"><use href="#mark"/></svg>
-        <span>Backed</span><svg class="strip__x"><use href="#mark"/></svg>
-        <span class="is-dim">Managed</span><svg class="strip__x"><use href="#mark"/></svg>
-        <span>Represented</span><svg class="strip__x"><use href="#mark"/></svg>
-        <span class="is-dim">Backed</span>
-      </div>
-    </div>
-
     <!-- ============ Work: a wall of posts ============
          Hidden until assets/js/posts.js lists real posts. The script then fills the wall,
          shows the section and its navigation links, and renumbers the sections after it. -->
     <section class="section work" id="work" data-section data-wall hidden>
       <div class="wrap">
         <header class="sec-head" data-reveal>
-          <span class="tag">(02)</span><span class="tag tag--on">Work</span><span class="sec-head__rule"></span>
+          <span class="tag">02</span><span class="tag tag--on">Work</span><span class="sec-head__rule"></span>
         </header>
 
         <div class="split-head">
@@ -197,7 +169,7 @@
     <section class="section talent" id="talent" data-section>
       <div class="wrap">
         <header class="sec-head" data-reveal>
-          <span class="tag">(02)</span><span class="tag tag--on">Talent</span><span class="sec-head__rule"></span>
+          <span class="tag">02</span><span class="tag tag--on">Talent</span><span class="sec-head__rule"></span>
         </header>
 
         <div class="split-head">
@@ -205,35 +177,20 @@
           <p class="lead" data-reveal style="--d:120ms">We work with a small number of people whose ideas move technology and finance. Follower counts don't decide it. Who is listening does.</p>
         </div>
 
-        <div class="pillars" data-pillars>
-          <article class="pillar is-active" data-reveal>
-            <h3 class="pillar__word">Technology</h3>
-            <div class="pillar__col">
-              <p class="tag"><span>A</span> Tech creators &amp; educators</p>
-              <div class="pillar__body">
-                <p>Builders, engineers and educators who work in public — across software, AI and the tools changing how people work. They show real work, and their audience acts on it.</p>
-              </div>
-            </div>
-          </article>
-          <article class="pillar" data-reveal style="--d:110ms">
-            <h3 class="pillar__word">Fintech</h3>
-            <div class="pillar__col">
-              <p class="tag"><span>B</span> Fintech &amp; finance voices</p>
-              <div class="pillar__body">
-                <p>Operators, analysts and investors who explain money, markets and financial technology to the people who make decisions with it.</p>
-              </div>
-            </div>
-          </article>
-          <article class="pillar" data-reveal style="--d:220ms">
-            <h3 class="pillar__word">Founders</h3>
-            <div class="pillar__col">
-              <p class="tag"><span>C</span> Founders &amp; operators</p>
-              <div class="pillar__body">
-                <p>Founders whose own voice is their company's most efficient channel. We manage the presence, so they can keep building.</p>
-              </div>
-            </div>
-          </article>
-        </div>
+        <ul class="cols">
+          <li data-reveal>
+            <h3>Technology</h3>
+            <p>Builders, engineers and educators who work in public — across software, AI and the tools changing how people work. They show real work, and their audience acts on it.</p>
+          </li>
+          <li data-reveal style="--d:90ms">
+            <h3>Fintech</h3>
+            <p>Operators, analysts and investors who explain money, markets and financial technology to the people who make decisions with it.</p>
+          </li>
+          <li data-reveal style="--d:180ms">
+            <h3>Founders</h3>
+            <p>Founders whose own voice is their company's most efficient channel. We manage the presence, so they can keep building.</p>
+          </li>
+        </ul>
 
         <div class="criteria">
           <p class="tag criteria__label" data-reveal>What we look for</p>
@@ -256,16 +213,13 @@
     <section class="section mgmt" id="management" data-section>
       <div class="wrap">
         <header class="sec-head" data-reveal>
-          <span class="tag">(03)</span><span class="tag tag--on">Management</span><span class="sec-head__rule"></span>
+          <span class="tag">03</span><span class="tag tag--on">Management</span><span class="sec-head__rule"></span>
         </header>
 
         <div class="mgmt__stage">
           <figure class="mgmt__fig" data-reveal aria-hidden="true" data-xdiagram></figure>
 
-          <h2 class="display mgmt__title" data-split data-reveal>
-            <span class="hl">You create.</span>
-            <span class="hl">We handle <em>the rest.</em></span>
-          </h2>
+          <h2 class="display h2 mgmt__title" data-split data-reveal>You create. <em>We handle the rest.</em></h2>
 
           <p class="lead mgmt__lead" data-reveal style="--d:120ms">Full management and representation for creators on X. One point of contact, in your corner for everything around the work.</p>
 
@@ -283,29 +237,29 @@
     <section class="section process" id="process" data-section>
       <div class="wrap">
         <header class="sec-head" data-reveal>
-          <span class="tag">(04)</span><span class="tag tag--on">Process</span><span class="sec-head__rule"></span>
+          <span class="tag">04</span><span class="tag tag--on">Process</span><span class="sec-head__rule"></span>
         </header>
 
         <h2 class="display h2 process__title" data-split data-reveal>How it <em>begins</em></h2>
 
         <ol class="steps" role="list" data-steps data-reveal>
           <li class="step">
-            <span class="step__n" aria-hidden="true">I</span>
+            <span class="step__n" aria-hidden="true">01</span>
             <span class="step__rule" aria-hidden="true"></span>
             <h3 class="step__t"><a href="#apply">Apply<svg aria-hidden="true"><use href="#i-arrow"/></svg></a></h3>
           </li>
           <li class="step">
-            <span class="step__n" aria-hidden="true">II</span>
+            <span class="step__n" aria-hidden="true">02</span>
             <span class="step__rule" aria-hidden="true"></span>
             <h3 class="step__t">Conversation</h3>
           </li>
           <li class="step">
-            <span class="step__n" aria-hidden="true">III</span>
+            <span class="step__n" aria-hidden="true">03</span>
             <span class="step__rule" aria-hidden="true"></span>
             <h3 class="step__t">Agreement</h3>
           </li>
           <li class="step">
-            <span class="step__n" aria-hidden="true">IV</span>
+            <span class="step__n" aria-hidden="true">04</span>
             <span class="step__rule" aria-hidden="true"><svg class="step__end"><use href="#mark"/></svg></span>
             <h3 class="step__t">Representation</h3>
           </li>
@@ -317,11 +271,11 @@
     <section class="section standard" id="standard" data-section>
       <div class="wrap">
         <header class="sec-head" data-reveal>
-          <span class="tag">(05)</span><span class="tag tag--on">Standard</span><span class="sec-head__rule"></span>
+          <span class="tag">05</span><span class="tag tag--on">Standard</span><span class="sec-head__rule"></span>
         </header>
 
         <div class="split-head">
-          <h2 class="display h2" data-split data-reveal>The <em>standard</em> we work to</h2>
+          <h2 class="display h2" data-split data-reveal>The standard <em>we work to</em></h2>
           <p class="lead" data-reveal style="--d:120ms">A public voice runs on trust, and trust is the one asset you can't buy back. So we work to a written standard — and we turn down whatever falls short of it.</p>
         </div>
 
@@ -359,7 +313,7 @@
     <section class="section partners" id="partners" data-section>
       <div class="wrap">
         <header class="sec-head" data-reveal>
-          <span class="tag">(06)</span><span class="tag tag--on">Partners</span><span class="sec-head__rule"></span>
+          <span class="tag">06</span><span class="tag tag--on">Partners</span><span class="sec-head__rule"></span>
         </header>
 
         <div class="partners__grid">
@@ -394,7 +348,7 @@
               </div>
             </div>
             <figcaption class="anatomy__cap">
-              <p class="tag">Fig. 02 — Anatomy of a managed partnership (illustrative)</p>
+              <p class="tag">Anatomy of a managed partnership (illustrative)</p>
               <ol class="anatomy__legend">
                 <li><b class="pin">A</b>Labelled as an ad, in the first line and with the platform's own label.</li>
                 <li><b class="pin">B</b>Written by the creator, in their own voice.</li>
@@ -410,7 +364,7 @@
     <section class="section faq" id="faq" data-section>
       <div class="wrap">
         <header class="sec-head" data-reveal>
-          <span class="tag">(07)</span><span class="tag tag--on">Questions</span><span class="sec-head__rule"></span>
+          <span class="tag">07</span><span class="tag tag--on">Questions</span><span class="sec-head__rule"></span>
         </header>
 
         <div class="faq__grid">
@@ -450,12 +404,12 @@
     <section class="section apply" id="apply" data-section>
       <div class="wrap">
         <header class="sec-head" data-reveal>
-          <span class="tag">(08)</span><span class="tag tag--on">Apply</span><span class="sec-head__rule"></span>
+          <span class="tag">08</span><span class="tag tag--on">Apply</span><span class="sec-head__rule"></span>
         </header>
 
         <div class="apply__grid">
           <div class="apply__copy">
-            <h2 class="display h2 apply__title" data-split data-reveal>If the industry reads you <em>first,</em> we should talk.</h2>
+            <h2 class="display h2 apply__title" data-split data-reveal>If the industry reads you first, <em>we should talk.</em></h2>
             <p class="lead" data-reveal style="--d:120ms">Every application is read by a person, not a filter.</p>
             <ol class="next" data-reveal style="--d:200ms">
               <li><span class="tag">01</span>We read your application and study your work.</li>
@@ -543,7 +497,6 @@
         <p>Independent. Not affiliated with X Corp. "X" is a trademark of X Corp.</p>
       </div>
     </div>
-    <p class="foot__word" aria-hidden="true">Represented</p>
   </footer>
 
   <div class="cursor" aria-hidden="true" data-cursor></div>

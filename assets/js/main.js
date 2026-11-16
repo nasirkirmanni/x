@@ -253,7 +253,7 @@
     links.forEach((link) => { link.hidden = false; });
     $$('main [data-section]').forEach((sec, i) => {
       const n = $('.sec-head .tag', sec);
-      if (n) n.textContent = '(' + two(i + 1) + ')';
+      if (n) n.textContent = two(i + 1);
     });
     $$('.menu__n').forEach((n, i) => { n.textContent = two(i + 1); });
 
@@ -377,7 +377,7 @@
       const span = document.createElement('span');
       span.className = 'mw';
       span.textContent = word;
-      span.style.opacity = '0.2';
+      span.style.opacity = '0.28';
       el.appendChild(span);
       if (i < words.length - 1) el.appendChild(document.createTextNode(' '));
       return span;
@@ -390,22 +390,7 @@
       const lit = p * (spans.length + 5);
       if (Math.abs(lit - last) < 0.03) return;
       last = lit;
-      for (let i = 0; i < spans.length; i++) spans[i].style.opacity = (0.2 + 0.8 * clamp(lit - i)).toFixed(3);
-    });
-  }
-
-  /* ---------- Oversized strip: drifts sideways with scroll ---------- */
-  function strip() {
-    const el = $('[data-strip]');
-    if (!el || reduced()) return;
-    const track = $('.strip__track', el);
-    scrollFns.push((y, vh) => {
-      const r = el.getBoundingClientRect();
-      if (r.bottom < -80 || r.top > vh + 80) return;
-      const p = clamp((vh - r.top) / (vh + r.height));
-      const room = Math.max(0, track.scrollWidth - window.innerWidth);
-      const travel = Math.min(room, window.innerWidth * 0.85);
-      track.style.setProperty('--x', (-p * travel).toFixed(1) + 'px');
+      for (let i = 0; i < spans.length; i++) spans[i].style.opacity = (0.28 + 0.72 * clamp(lit - i)).toFixed(3);
     });
   }
 
@@ -468,6 +453,8 @@
       const free = content ? content.getBoundingClientRect().top - rect.top - navH : h * 0.3;
       const wide = w >= 900 || (w >= 600 && free < 200);
       hero.classList.toggle('hero--side', wide);
+      // Where the text starts, so CSS can fade the figure out before it (top composition).
+      hero.style.setProperty('--content-top', Math.round(free + navH) + 'px');
       cx = w * (wide ? (w >= 900 ? 0.7 : 0.8) : 0.5);
       cy = wide ? h * (w >= 900 ? 0.44 : 0.42) : navH + Math.max(22, free * 0.56);
       const theta = (wide ? 47 : 57) * Math.PI / 180;  // arm angle from horizontal
@@ -778,18 +765,6 @@
     });
   }
 
-  /* ---------- Talent pillars: one lit at a time on pointer devices ---------- */
-  function pillars() {
-    const wrap = $('[data-pillars]');
-    if (!wrap) return;
-    const items = $$('.pillar', wrap);
-    const activate = (target) => items.forEach((item) => item.classList.toggle('is-active', item === target));
-    items.forEach((item) => {
-      item.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') activate(item); });
-      item.addEventListener('click', () => activate(item));
-    });
-  }
-
   /* ---------- Process: the ruled line draws once, when most of it is in view ---------- */
   function steps() {
     const list = $('[data-steps]');
@@ -939,7 +914,7 @@
       dot.style.setProperty('--cy', e.clientY + 'px');
       const target = e.target instanceof Element ? e.target : null;
       const field = target && target.closest('input, textarea, select');
-      const active = target && target.closest('a, button, label, .pillar');
+      const active = target && target.closest('a, button, label');
       dot.classList.toggle('is-hidden', !!field);
       dot.classList.toggle('is-hover', !!active && !field);
     }, { passive: true });
@@ -970,11 +945,9 @@
   reveals();
   navigation();
   menu();
-  strip();
   xfield();
   xdiagram();
   accordions();
-  pillars();
   steps();
   applyForm();
   cursor();
