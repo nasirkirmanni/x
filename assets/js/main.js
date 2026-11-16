@@ -62,6 +62,202 @@
     $$('[data-year]').forEach((el) => { el.textContent = String(new Date().getFullYear()); });
   }
 
+  /* ---------- Work: a wall of posts, filled from posts.js ----------
+     The section stays off the page until posts.js lists real posts. Adding ?wall=sample
+     to the address fills it with placeholder cards instead, to check the layout. */
+  function wall() {
+    const section = $('[data-wall]');
+    if (!section) return;
+    const list = $('[data-wall-list]', section);
+    const note = $('[data-wall-note]', section);
+    const links = $$('[data-wall-link]');
+    const data = window.POSTS || {};
+    const sample = new URLSearchParams(window.location.search).get('wall') === 'sample';
+
+    const onX = (url) => {
+      try {
+        const u = new URL(url);
+        return u.protocol === 'https:' && /^(www\.|mobile\.)?(x|twitter)\.com$/.test(u.hostname);
+      } catch (err) { return false; }
+    };
+    const placeholder = (text) => ({
+      name: 'Creator Name', handle: 'handle', verified: true, date: '2026-11-12', text,
+      views: '0.0M', replies: '0', reposts: '0', likes: '0', bookmarks: '0'
+    });
+    const posts = sample
+      ? [
+        { ...placeholder('The opening lines of the post appear here. Longer posts are cut off after two lines, so every card keeps the same shape.'), frame: true },
+        { ...placeholder('A post with a picture or a video shows a still from it, with the view count in the corner.'), frame: true },
+        placeholder('A post with no picture is set larger, like a quotation, so the words carry the card. It can run to seven lines before it is cut off.'),
+        { ...placeholder('Each card opens the real post on X in a new tab.'), frame: true },
+        { ...placeholder('Figures are copied from the post, and the date they were copied is printed under the wall.'), frame: true }
+      ]
+      : (Array.isArray(data.items) ? data.items : []).filter((p) => p && p.name && p.handle && onX(p.url));
+
+    if (!list || !posts.length) {
+      section.remove();
+      links.forEach((el) => el.remove());
+      return;
+    }
+
+    const NS = 'http://www.w3.org/2000/svg';
+    const el = (tag, cls, text) => {
+      const node = document.createElement(tag);
+      if (cls) node.className = cls;
+      if (text != null) node.textContent = text;
+      return node;
+    };
+    const icon = (id) => {
+      const svg = document.createElementNS(NS, 'svg');
+      const use = document.createElementNS(NS, 'use');
+      svg.setAttribute('aria-hidden', 'true');
+      svg.setAttribute('viewBox', id === 'mark' ? '0 0 24 24' : id === 'i-arrow' ? '0 0 16 16' : '0 0 20 20');
+      use.setAttribute('href', '#' + id);
+      svg.appendChild(use);
+      return svg;
+    };
+    const picture = (src, alt) => {
+      const img = el('img');
+      img.src = src; img.alt = alt || ''; img.loading = 'lazy'; img.decoding = 'async';
+      return img;
+    };
+    const count = (v) => {
+      if (typeof v === 'string') return v.trim();
+      if (typeof v !== 'number' || !isFinite(v) || v < 0) return '';
+      try { return new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(v); }
+      catch (err) { return String(v); }
+    };
+    const day = (v) => {
+      const text = v ? String(v).trim() : '';
+      if (!/^\d{4}-\d{2}-\d{2}/.test(text)) return { text, iso: '' };
+      const d = new Date(text.slice(0, 10) + 'T00:00:00Z');
+      if (isNaN(d)) return { text, iso: '' };
+      return {
+        text: new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(d),
+        iso: text.slice(0, 10)
+      };
+    };
+    const initials = (name) => String(name).trim().split(/\s+/).slice(0, 2).map((w) => w.charAt(0)).join('').toUpperCase();
+    const STATS = [['replies', 'i-reply'], ['reposts', 'i-repost'], ['likes', 'i-like'], ['bookmarks', 'i-save']];
+    let figures = false;
+
+    const card = (p, i) => {
+      const handle = String(p.handle).replace(/^@/, '').trim();
+      const hasMedia = !!(p.image || p.frame);
+      const cell = el('li', 'wall__cell');
+      const box = el(sample ? 'div' : 'a', 'card' + (hasMedia ? '' : ' card--quote'));
+      if (!sample) { box.href = p.url; box.target = '_blank'; box.rel = 'noopener noreferrer'; }
+      cell.setAttribute('data-reveal', '');
+      cell.style.setProperty('--d', (i % 3) * 90 + 'ms');
+
+      // Who posted it, and when
+      const head = el('div', 'card__head');
+      const avatar = el('span', 'card__avatar');
+      if (p.avatar) {
+        const img = picture(p.avatar, '');
+        img.addEventListener('error', () => { avatar.textContent = initials(p.name); });
+        avatar.appendChild(img);
+      } else {
+        avatar.textContent = initials(p.name);
+      }
+      avatar.setAttribute('aria-hidden', 'true');
+      const who = el('div', 'card__who');
+      const name = el('div', 'card__name');
+      name.appendChild(el('span', '', String(p.name)));
+      if (p.verified) { name.appendChild(icon('i-check')); name.appendChild(el('span', 'sr-only', 'Verified account.')); }
+      const meta = el('div', 'card__meta', '@' + handle);
+      const when = day(p.date);
+      if (when.text) {
+        const time = el('time', '', when.text);
+        if (when.iso) time.dateTime = when.iso;
+        meta.appendChild(document.createTextNode(' · '));
+        meta.appendChild(time);
+      }
+      who.append(name, meta);
+      const end = sample ? el('span', 'card__chip', 'Sample') : el('span', 'card__go');
+      if (!sample) end.appendChild(icon('i-arrow'));
+      head.append(avatar, who, end);
+      box.appendChild(head);
+
+      if (p.text) box.appendChild(el('p', 'card__text', String(p.text).replace(/\s+/g, ' ').trim()));
+
+      // A still from the post, with its view count
+      const views = count(p.views);
+      if (hasMedia) {
+        const media = el('div', 'card__media' + (p.image ? '' : ' card__media--empty'));
+        if (p.image) {
+          const img = picture(p.image, p.alt);
+          img.addEventListener('error', () => { img.remove(); media.classList.add('card__media--empty'); media.prepend(icon('mark')); });
+          media.appendChild(img);
+        } else {
+          media.appendChild(icon('mark'));
+        }
+        if (views) {
+          const badge = el('span', 'card__views');
+          badge.append(icon('i-views'), document.createTextNode(views), el('span', 'sr-only', ' views'));
+          media.appendChild(badge);
+        }
+        box.appendChild(media);
+      }
+
+      // The post's own figures. Any that were left out are simply not shown.
+      const stats = el('ul', 'card__stats');
+      const add = (label, id, value) => {
+        const li = el('li');
+        li.append(icon(id), document.createTextNode(value), el('span', 'sr-only', ' ' + label));
+        stats.appendChild(li);
+      };
+      STATS.forEach(([key, id]) => { const v = count(p[key]); if (v) add(key, id, v); });
+      if (!hasMedia && views) add('views', 'i-views', views);
+      if (stats.children.length) box.appendChild(stats);
+      if (views || stats.children.length) figures = true;
+
+      if (!sample) box.appendChild(el('span', 'sr-only', 'Opens on X in a new tab.'));
+      cell.appendChild(box);
+      return cell;
+    };
+
+    // The last place on the wall is open, and leads to the application form.
+    const invite = (i) => {
+      const cell = el('li', 'wall__cell wall__cell--invite');
+      const box = el('a', 'card card--invite');
+      const label = el('span', 'tag');
+      const plus = el('span', 'glyph glyph--plus');
+      const line = el('p', 'card__line', 'The next post here could be ');
+      const cta = el('span', 'card__cta');
+      const go = el('span', 'card__go');
+      box.href = '#apply';
+      cell.setAttribute('data-reveal', '');
+      cell.style.setProperty('--d', (i % 3) * 90 + 'ms');
+      plus.setAttribute('aria-hidden', 'true');
+      label.append(plus, document.createTextNode('Applications open'));
+      line.appendChild(el('em', '', 'yours.'));
+      go.appendChild(icon('i-arrow'));
+      cta.append(el('span', '', 'Apply for representation'), go);
+      box.append(label, line, cta);
+      cell.appendChild(box);
+      return cell;
+    };
+
+    posts.forEach((p, i) => list.appendChild(card(p, i)));
+    list.appendChild(invite(posts.length));
+
+    const asOf = day(data.asOf).text;
+    if (sample) note.textContent = 'Sample layout. These are placeholder cards, not real posts.';
+    else if (figures) note.textContent = 'Figures as shown on X' + (asOf ? ' on ' + asOf : '') + '.';
+    else note.remove();
+
+    // Show the section and its links, then number every section in page order.
+    const two = (n) => String(n).padStart(2, '0');
+    section.hidden = false;
+    links.forEach((link) => { link.hidden = false; });
+    $$('main [data-section]').forEach((sec, i) => {
+      const n = $('.sec-head .tag', sec);
+      if (n) n.textContent = '(' + two(i + 1) + ')';
+    });
+    $$('.menu__n').forEach((n, i) => { n.textContent = two(i + 1); });
+  }
+
   /* ---------- Headlines: wrap each word so it can rise into place ---------- */
   function splitHeadlines() {
     const wrapWords = (node) => {
@@ -793,6 +989,7 @@
 
   /* ---------- Start ---------- */
   hydrate();
+  wall();
   splitHeadlines();
   statement();
   reveals();

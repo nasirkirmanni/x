@@ -20,10 +20,11 @@ Double-click `index.html`, or serve the folder with any static server. Fonts loa
 
 | File | What it holds |
 |---|---|
-| `index.html` | All structure and wording. Each section starts with a comment such as `<!-- 03 Disciplines -->`. |
+| `index.html` | All structure and wording. Each section starts with a comment such as `<!-- 03 Management -->`. |
 | `assets/css/styles.css` | All styling. Colours, fonts and spacing are variables at the top. |
 | `assets/js/main.js` | Motion and behaviour: the hero figure, scroll effects, menu, accordions, form. |
 | `assets/js/site.config.js` | **The agency name, contact details and form address.** |
+| `assets/js/posts.js` | **The posts shown in the Work section.** Empty for now, so that section is hidden. |
 | `assets/img/favicon.svg` | Browser-tab icon (the placeholder mark). |
 
 ## Set the name
@@ -35,6 +36,26 @@ The text used when the site is shared on social media is in the `<head>` of `ind
 ## Connect the form
 
 Set `formEndpoint` in `site.config.js` to a form service address, for example Formspree or Web3Forms. Until then the form runs in **preview mode**: it validates, shows the confirmation, says plainly that nothing was sent, and sends nothing.
+
+## The Work section (a wall of posts)
+
+A grid of post cards: who posted, the opening words, a still from the post, and its figures. Each card opens the real post on X.
+
+It is **switched off until `assets/js/posts.js` lists at least one post**. With the list empty, the section and its "Work" links are not on the page at all, and the other sections keep their numbers.
+
+To see the layout before you have posts, add `?wall=sample` to the address, for example `https://tech-fintech-creators.vercel.app/?wall=sample#work`. That shows placeholder cards, each labelled "Sample".
+
+To switch it on:
+
+1. Add each post to `items` in `posts.js`. The file explains every field.
+2. Put pictures in `assets/posts/` (the folder does not exist yet). Stills are cropped to 16:9 and shown in black and white.
+3. Set `asOf` to the date you copied the figures. The page prints it under the wall.
+
+Rules worth keeping:
+
+- Show only posts you may show: your own, or posts by people you represent who have agreed in writing. A post on this page reads as "this person is our client".
+- Copy figures from the post itself. Do not round up, and update `asOf` when you refresh them.
+- The line under the heading says the posts are from people you represent. If you show your own posts instead, change that line in `index.html`.
 
 ## Before launch
 
