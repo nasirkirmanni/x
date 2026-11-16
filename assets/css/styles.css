@@ -109,7 +109,7 @@ main, .foot { position: relative; z-index: 1; }
 
 /* Single-column grids must not grow to fit wide content (it would overflow on phones). */
 .split-head, .std,
-.faq__grid, .apply__grid, .foot__in { grid-template-columns: minmax(0, 1fr); }
+.faq__grid, .foot__in { grid-template-columns: minmax(0, 1fr); }
 
 /* ---------- Dashed lines at the edges of the content ---------- */
 .guides { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
@@ -872,71 +872,95 @@ html:not(.js) .flow__art:not([data-art="3"]) { display: none; }
 .js .is-open > .acc__panel > .acc__in { visibility: visible; transition-delay: 0s; }
 .acc__in p { padding-bottom: 1.25rem; font-size: .9375rem; color: var(--mute); max-width: 36em; }
 
-/* ---------- 08 Apply ---------- */
-.apply__grid { display: grid; gap: clamp(2.5rem, 6vw, 4.5rem); }
-.apply__copy { display: grid; gap: 1.5rem; justify-items: start; }
-.next { width: 100%; max-width: 30rem; display: grid; border-top: 1px solid var(--line-2); }
-.next li { display: grid; grid-template-columns: 2.25rem minmax(0, 1fr); align-items: baseline; gap: .75rem; padding-block: .9rem; border-bottom: 1px solid var(--line); font-size: .9375rem; color: var(--paper); }
-.next .tag { font-variant-numeric: tabular-nums; }
-.contact { display: grid; gap: .35rem; }
-.contact li { display: flex; align-items: baseline; gap: 1rem; }
-.contact .tag { width: 4rem; }
-@media (min-width: 1024px) {
-  .apply__grid { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 4rem; align-items: start; }
-}
+/* ---------- 08 Apply ----------
+   One conversation, centred: the heading, a large creator/brand switch, then a wide form on
+   the dot grid with large light inputs and tap-to-choose options, and underneath the three
+   things that happen next. */
+.apply__head { display: grid; justify-items: center; gap: 1.1rem; text-align: center; margin-bottom: clamp(2.5rem, 5vw, 3.5rem); }
+.apply__title { max-width: 15em; }
+.contact { display: flex; flex-wrap: wrap; justify-content: center; gap: .35rem 2rem; }
+.contact li { display: flex; align-items: baseline; gap: .75rem; }
 
 .formcard {
-  position: relative;
-  padding: clamp(1.25rem, 3vw, 2.25rem);
-  border: 1px solid var(--line-2); border-radius: 1.25rem;
-  background: var(--ink-1);
+  position: relative; max-width: 62rem; margin-inline: auto;
+  padding: clamp(1.5rem, 4vw, 3.25rem);
+  border: 1px solid var(--line-2); border-radius: 1.5rem;
+  background: radial-gradient(rgba(255, 255, 255, .06) 1px, transparent 1.4px) 0 0 / 24px 24px, var(--ink-1);
 }
-.seg { display: inline-flex; margin-bottom: 1.75rem; padding: .25rem; border: 1px solid var(--line-2); border-radius: 999px; }
+.seg {
+  display: flex; width: fit-content; margin: 0 auto clamp(2rem, 4vw, 3rem);
+  padding: .3rem; border: 1px solid var(--line-2); border-radius: 999px; background: var(--black);
+}
 .seg__btn {
-  min-height: 2.5rem; padding: 0 1.15rem; border-radius: 999px;
-  font-size: .8125rem; font-weight: 500; color: var(--mute);
+  min-height: 2.75rem; padding: 0 1.4rem; border-radius: 999px;
+  font-size: .9375rem; font-weight: 500; color: var(--mute);
   transition: color var(--t-fast), background-color var(--t-med) var(--ease);
 }
 .seg__btn:hover { color: var(--white); }
 .seg__btn.is-on { background: var(--white); color: var(--black); }
 
-.form__set { display: grid; gap: 1.5rem 1.25rem; }
-@media (min-width: 560px) {
+.form__set { display: grid; gap: 2rem; }
+@media (min-width: 640px) {
   .form__set { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .field--wide { grid-column: 1 / -1; }
 }
-.field { display: grid; gap: .4rem; min-width: 0; align-content: start; }
-.field label { font-size: var(--fs-small); color: var(--mute); }
+@media (min-width: 1024px) { .form__set { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 2.5rem; } }
+.field { display: grid; gap: .3rem; min-width: 0; align-content: start; }
+.field > label, .field--chips > legend { font-size: var(--fs-small); color: var(--mute); transition: color var(--t-fast); }
+.field:focus-within > label { color: var(--white); }
 .req { color: var(--white); }
-.field input, .field select, .field textarea {
-  width: 100%; min-height: 2.75rem;
-  padding: .6rem 0;
+/* Large, light inputs on a single underline. */
+.field :is(input:not([type="radio"]), textarea) {
+  width: 100%; min-height: 3rem;
+  padding: .35rem 0 .6rem;
   background: transparent; border: 0; border-bottom: 1px solid var(--line-2); border-radius: 0;
-  font-size: 1rem; color: var(--white);
+  font-size: clamp(1.125rem, .5vw + 1rem, 1.375rem); font-weight: 300; letter-spacing: -.015em; color: var(--white);
   outline: none;
   transition: border-color var(--t-fast), box-shadow var(--t-fast);
 }
-.field textarea { min-height: 5.5rem; line-height: 1.5; resize: vertical; }
-.field select {
-  -webkit-appearance: none; appearance: none; padding-right: 1.75rem;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%23fff' stroke-width='1.1'%3E%3Cpath d='M2 4.5l4 4 4-4'/%3E%3C/svg%3E") right .15rem center / .75rem no-repeat;
-}
-.field select option { background: #0c0c0c; color: #fff; }
-.field input::placeholder, .field textarea::placeholder { color: #666; }
-.field :is(input, select, textarea):hover { border-bottom-color: var(--line-3); }
-.field :is(input, select, textarea):focus-visible,
-.field.is-invalid :is(input, select, textarea) { border-bottom-color: var(--white); box-shadow: 0 1px 0 0 var(--white); }
+.field textarea { min-height: 4.5rem; line-height: 1.45; resize: vertical; }
+.field :is(input, textarea)::placeholder { color: #5a5a5a; }
+.field :is(input:not([type="radio"]), textarea):hover { border-bottom-color: var(--line-3); }
+.field :is(input:not([type="radio"]), textarea):focus-visible,
+.field.is-invalid :is(input:not([type="radio"]), textarea) { border-bottom-color: var(--white); box-shadow: 0 1px 0 0 var(--white); }
 .field input:-webkit-autofill {
   -webkit-text-fill-color: #fff; caret-color: #fff;
   box-shadow: 0 0 0 100px var(--ink-1) inset, 0 1px 0 0 var(--line-2);
 }
+/* Tap-to-choose options in place of drop-downs. */
+.field--chips { display: block; }
+.field--chips > legend { padding: 0; margin-bottom: .8rem; }
+.chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.chip { position: relative; display: inline-flex; }
+.chip input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.chip span {
+  display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1.15rem;
+  border: 1px solid var(--line-2); border-radius: 999px; background: rgba(0, 0, 0, .4);
+  font-size: .875rem; color: var(--paper); white-space: nowrap;
+  transition: background-color var(--t-med) var(--ease), border-color var(--t-fast), color var(--t-fast);
+}
+.chip:hover span { border-color: var(--line-3); color: var(--white); }
+.chip input:checked + span { background: var(--white); border-color: var(--white); color: var(--black); }
+.chip input:focus-visible + span { outline: 1px solid var(--white); outline-offset: 3px; }
 .field__err { display: flex; align-items: baseline; gap: .5rem; font-size: var(--fs-small); color: var(--white); }
 .field__err::before { content: "×"; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-.form__end { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 1.5rem; margin-top: 2rem; }
-.form__note { font-size: var(--fs-small); color: var(--dim); max-width: 20em; }
+.form__end {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 1.5rem;
+  margin-top: 2.5rem; padding-top: 1.75rem; border-top: 1px solid var(--line);
+}
+.form__note { font-size: var(--fs-small); color: var(--dim); max-width: 24em; }
 .form__alert { margin-top: 1rem; font-size: .875rem; color: var(--white); }
-.form__done { display: grid; gap: .75rem; justify-items: start; padding-block: clamp(1.5rem, 5vw, 4rem); outline: none; }
+.form__done { display: grid; gap: .75rem; justify-items: center; text-align: center; padding-block: clamp(2rem, 6vw, 4.5rem); outline: none; }
+
+/* What happens next: three steps in a row, each on a hairline with a short white lead-in. */
+.next { display: grid; gap: 1.25rem; max-width: 62rem; margin: clamp(2.5rem, 5vw, 3.5rem) auto 0; }
+.next li { position: relative; display: grid; gap: .45rem; padding-top: 1.1rem; }
+.next li::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--line-2); }
+.next li::after { content: ""; position: absolute; left: 0; top: 0; width: 2rem; height: 1px; background: var(--white); }
+.next .tag { font-variant-numeric: tabular-nums; }
+.next p { font-size: .9375rem; color: var(--paper); max-width: 24em; }
+@media (min-width: 768px) { .next { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem; } }
 .form__done p { color: var(--mute); }
 .form__done-mark { width: 2rem; height: 2rem; margin-bottom: .75rem; color: var(--white); }
 .form__done .form__demo {

@@ -450,80 +450,91 @@
       </div>
     </section>
 
-    <!-- ============ 08 Apply ============ -->
+    <!-- ============ 08 Apply ============
+         One conversation, centred: the heading, a large creator/brand switch, then a wide
+         form on the dot grid with large inputs and tap-to-choose options, and underneath the
+         three things that happen next. -->
     <section class="section apply" id="apply" data-section>
       <div class="wrap">
         <header class="sec-head" data-reveal>
           <span class="tag">08</span><span class="tag tag--on">Apply</span><span class="sec-head__rule"></span>
         </header>
 
-        <div class="apply__grid">
-          <div class="apply__copy">
-            <h2 class="display h2 apply__title" data-split data-reveal>If the industry reads you first, <em>we should talk.</em></h2>
-            <p class="lead" data-reveal style="--d:120ms">Every application is read by a person, not a filter.</p>
-            <ol class="next" data-reveal style="--d:200ms">
-              <li><span class="tag">01</span>We read your application and study your work.</li>
-              <li><span class="tag">02</span>If there is a fit, we arrange a conversation.</li>
-              <li><span class="tag">03</span>If we both want to go ahead, you receive our terms in writing.</li>
-            </ol>
-            <ul class="contact" data-reveal hidden data-if="contact">
-              <li hidden data-if="email"><span class="tag">Email</span><a class="link" data-site="email" href="#"></a></li>
-              <li hidden data-if="x"><span class="tag">On X</span><a class="link" data-site="x" href="#" rel="noopener"></a></li>
-            </ul>
-          </div>
+        <div class="apply__head">
+          <h2 class="display h2 apply__title" data-split data-reveal>If the industry reads you first, <em>we should talk.</em></h2>
+          <p class="lead" data-reveal style="--d:120ms">Every application is read by a person, not a filter.</p>
+          <ul class="contact" data-reveal hidden data-if="contact">
+            <li hidden data-if="email"><span class="tag">Email</span><a class="link" data-site="email" href="#"></a></li>
+            <li hidden data-if="x"><span class="tag">On X</span><a class="link" data-site="x" href="#" rel="noopener"></a></li>
+          </ul>
+        </div>
 
-          <div class="formcard" data-reveal style="--d:160ms">
-            <form class="form" data-form novalidate>
-              <div class="seg" role="tablist" aria-label="I am applying as">
-                <button class="seg__btn is-on" type="button" role="tab" id="tab-creator" aria-selected="true" aria-controls="panel-creator" data-kind="creator">Creator</button>
-                <button class="seg__btn" type="button" role="tab" id="tab-brand" aria-selected="false" aria-controls="panel-brand" data-kind="brand" tabindex="-1">Brand</button>
-              </div>
-              <input type="hidden" name="type" value="creator" data-kind-input>
-              <div class="hp" aria-hidden="true"><label>Leave this empty <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"></label></div>
-
-              <fieldset class="form__set" id="panel-creator" role="tabpanel" aria-labelledby="tab-creator" data-set="creator">
-                <legend class="sr-only">Apply for representation</legend>
-                <div class="field"><label for="c-name">Full name <span class="req" aria-hidden="true">*</span></label><input id="c-name" name="name" type="text" autocomplete="name" required></div>
-                <div class="field"><label for="c-handle">X handle <span class="req" aria-hidden="true">*</span></label><input id="c-handle" name="handle" type="text" inputmode="text" autocapitalize="none" autocomplete="off" spellcheck="false" placeholder="@" required data-rule="handle"></div>
-                <div class="field"><label for="c-email">Email <span class="req" aria-hidden="true">*</span></label><input id="c-email" name="email" type="email" autocomplete="email" required></div>
-                <div class="field"><label for="c-audience">Audience on X</label>
-                  <select id="c-audience" name="audience">
-                    <option value="">Select</option><option>Under 10k</option><option>10k – 50k</option><option>50k – 150k</option><option>150k – 500k</option><option>500k+</option>
-                  </select>
-                </div>
-                <div class="field field--wide"><label for="c-known">What are you known for? <span class="req" aria-hidden="true">*</span></label><input id="c-known" name="known_for" type="text" required></div>
-                <div class="field field--wide"><label for="c-goals">What do you want from management?</label><textarea id="c-goals" name="goals" rows="3"></textarea></div>
-              </fieldset>
-
-              <fieldset class="form__set" id="panel-brand" role="tabpanel" aria-labelledby="tab-brand" data-set="brand" hidden disabled>
-                <legend class="sr-only">Partnership enquiry</legend>
-                <div class="field"><label for="b-name">Your name <span class="req" aria-hidden="true">*</span></label><input id="b-name" name="name" type="text" autocomplete="name" required></div>
-                <div class="field"><label for="b-company">Company <span class="req" aria-hidden="true">*</span></label><input id="b-company" name="company" type="text" autocomplete="organization" required></div>
-                <div class="field"><label for="b-email">Work email <span class="req" aria-hidden="true">*</span></label><input id="b-email" name="email" type="email" autocomplete="email" required></div>
-                <div class="field"><label for="b-timing">Timing</label>
-                  <select id="b-timing" name="timing">
-                    <option value="">Select</option><option>This month</option><option>This quarter</option><option>Later this year</option><option>Not sure yet</option>
-                  </select>
-                </div>
-                <div class="field field--wide"><label for="b-reach">Who do you need to reach? <span class="req" aria-hidden="true">*</span></label><input id="b-reach" name="reach" type="text" required></div>
-                <div class="field field--wide"><label for="b-details">Anything else we should know?</label><textarea id="b-details" name="details" rows="3"></textarea></div>
-              </fieldset>
-
-              <div class="form__end">
-                <p class="form__note">Fields marked * are required. We use what you send only to reply to you.</p>
-                <button class="btn" type="submit" data-magnetic><span class="btn__label" data-submit-label>Send application</span><svg class="btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
-              </div>
-              <p class="form__alert" role="alert" data-form-alert hidden></p>
-            </form>
-
-            <div class="form__done" data-form-done hidden tabindex="-1" role="status">
-              <svg class="form__done-mark" aria-hidden="true"><use href="#mark"/></svg>
-              <h3 class="statement statement--sm">Received.</h3>
-              <p>Thank you. A person will read this and reply.</p>
-              <p class="form__demo" data-form-demo hidden>Preview mode: this form is not connected to an inbox yet, so nothing was sent.</p>
+        <div class="formcard" data-reveal style="--d:160ms">
+          <form class="form" data-form novalidate>
+            <div class="seg" role="tablist" aria-label="I am applying as">
+              <button class="seg__btn is-on" type="button" role="tab" id="tab-creator" aria-selected="true" aria-controls="panel-creator" data-kind="creator">I'm a creator</button>
+              <button class="seg__btn" type="button" role="tab" id="tab-brand" aria-selected="false" aria-controls="panel-brand" data-kind="brand" tabindex="-1">I'm a brand</button>
             </div>
+            <input type="hidden" name="type" value="creator" data-kind-input>
+            <div class="hp" aria-hidden="true"><label>Leave this empty <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"></label></div>
+
+            <fieldset class="form__set" id="panel-creator" role="tabpanel" aria-labelledby="tab-creator" data-set="creator">
+              <legend class="sr-only">Apply for representation</legend>
+              <div class="field"><label for="c-name">Full name <span class="req" aria-hidden="true">*</span></label><input id="c-name" name="name" type="text" autocomplete="name" required></div>
+              <div class="field"><label for="c-handle">X handle <span class="req" aria-hidden="true">*</span></label><input id="c-handle" name="handle" type="text" inputmode="text" autocapitalize="none" autocomplete="off" spellcheck="false" placeholder="@" required data-rule="handle"></div>
+              <div class="field"><label for="c-email">Email <span class="req" aria-hidden="true">*</span></label><input id="c-email" name="email" type="email" autocomplete="email" required></div>
+              <fieldset class="field field--wide field--chips">
+                <legend>Audience on X</legend>
+                <div class="chips">
+                  <label class="chip"><input type="radio" name="audience" value="Under 10k"><span>Under 10k</span></label>
+                  <label class="chip"><input type="radio" name="audience" value="10k – 50k"><span>10k – 50k</span></label>
+                  <label class="chip"><input type="radio" name="audience" value="50k – 150k"><span>50k – 150k</span></label>
+                  <label class="chip"><input type="radio" name="audience" value="150k – 500k"><span>150k – 500k</span></label>
+                  <label class="chip"><input type="radio" name="audience" value="500k+"><span>500k+</span></label>
+                </div>
+              </fieldset>
+              <div class="field field--wide"><label for="c-known">What are you known for? <span class="req" aria-hidden="true">*</span></label><input id="c-known" name="known_for" type="text" required></div>
+              <div class="field field--wide"><label for="c-goals">What do you want from management?</label><textarea id="c-goals" name="goals" rows="2"></textarea></div>
+            </fieldset>
+
+            <fieldset class="form__set" id="panel-brand" role="tabpanel" aria-labelledby="tab-brand" data-set="brand" hidden disabled>
+              <legend class="sr-only">Partnership enquiry</legend>
+              <div class="field"><label for="b-name">Your name <span class="req" aria-hidden="true">*</span></label><input id="b-name" name="name" type="text" autocomplete="name" required></div>
+              <div class="field"><label for="b-company">Company <span class="req" aria-hidden="true">*</span></label><input id="b-company" name="company" type="text" autocomplete="organization" required></div>
+              <div class="field"><label for="b-email">Work email <span class="req" aria-hidden="true">*</span></label><input id="b-email" name="email" type="email" autocomplete="email" required></div>
+              <fieldset class="field field--wide field--chips">
+                <legend>Timing</legend>
+                <div class="chips">
+                  <label class="chip"><input type="radio" name="timing" value="This month"><span>This month</span></label>
+                  <label class="chip"><input type="radio" name="timing" value="This quarter"><span>This quarter</span></label>
+                  <label class="chip"><input type="radio" name="timing" value="Later this year"><span>Later this year</span></label>
+                  <label class="chip"><input type="radio" name="timing" value="Not sure yet"><span>Not sure yet</span></label>
+                </div>
+              </fieldset>
+              <div class="field field--wide"><label for="b-reach">Who do you need to reach? <span class="req" aria-hidden="true">*</span></label><input id="b-reach" name="reach" type="text" required></div>
+              <div class="field field--wide"><label for="b-details">Anything else we should know?</label><textarea id="b-details" name="details" rows="2"></textarea></div>
+            </fieldset>
+
+            <div class="form__end">
+              <p class="form__note">Fields marked * are required. We use what you send only to reply to you.</p>
+              <button class="btn" type="submit" data-magnetic><span class="btn__label" data-submit-label>Send application</span><svg class="btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+            </div>
+            <p class="form__alert" role="alert" data-form-alert hidden></p>
+          </form>
+
+          <div class="form__done" data-form-done hidden tabindex="-1" role="status">
+            <svg class="form__done-mark" aria-hidden="true"><use href="#mark"/></svg>
+            <h3 class="statement statement--sm">Received.</h3>
+            <p>Thank you. A person will read this and reply.</p>
+            <p class="form__demo" data-form-demo hidden>Preview mode: this form is not connected to an inbox yet, so nothing was sent.</p>
           </div>
         </div>
+
+        <ol class="next" data-reveal style="--d:200ms">
+          <li><span class="tag">01</span><p>We read your application and study your work.</p></li>
+          <li><span class="tag">02</span><p>If there is a fit, we arrange a conversation.</p></li>
+          <li><span class="tag">03</span><p>If we both want to go ahead, you receive our terms in writing.</p></li>
+        </ol>
       </div>
     </section>
   </main>
