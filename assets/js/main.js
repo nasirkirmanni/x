@@ -226,6 +226,9 @@
     let startedAt = 0;
     let rot = 0, rotT = 0, ox = 0, oy = 0, oxT = 0, oyT = 0, depth = 0;
     let visible = true, raf = 0, last = 0;
+    // Boost: 0 at rest, 1 while the pointer is on an Apply button. It speeds the
+    // flow, brings in more signals as streaks, and makes the node send out rings.
+    let boost = 0, boostT = 0, ping = 0, baseSparks = 4;
     const sparks = [];
 
     const newSpark = (stagger = 0) => ({
@@ -279,14 +282,20 @@
       grad.addColorStop(0.7, 'rgba(196,200,206,.4)');
       grad.addColorStop(1, 'rgba(170,175,182,0)');
 
-      const want = wide ? 4 : 2;
+      // A few signals are always travelling. The rest of the pool joins in during a boost.
+      baseSparks = wide ? 4 : 2;
+      const pool = wide ? 26 : 10;
       sparks.length = 0;
-      for (let i = 0; i < want; i++) sparks.push(newSpark(i / want));
+      for (let i = 0; i < pool; i++) {
+        const sp = newSpark(i / baseSparks);
+        if (i >= baseSparks) sp.p = Math.random();   // already spread along their strands
+        sparks.push(sp);
+      }
     }
 
     function draw() {
       ctx.clearRect(0, 0, w, h);
-      const zoom = 1 + depth * 0.5;
+      const zoom = (1 + depth * 0.5) * (1 + boost * 0.045);
       const fade = 1 - smooth(depth * 1.2);
       if (fade <= 0.002) return;
       const grow = easeOut(reveal);
@@ -296,7 +305,7 @@
       ctx.rotate(rot);
       ctx.scale(zoom, zoom);
       ctx.strokeStyle = grad;
-      ctx.lineWidth = lw / zoom;
+      ctx.lineWidth = (lw * (1 + boost * 0.55)) / zoom;
       ctx.lineCap = 'round';
 
       // Strands
@@ -339,18 +348,47 @@
       ctx.strokeStyle = '#fff';
       ctx.lineWidth = 1 / zoom;
       ctx.beginPath();
-      ctx.arc(0, 0, 4.5, 0, Math.PI * 2);
+      ctx.arc(0, 0, 4.5 + boost * 3, 0, Math.PI * 2);
       ctx.stroke();
 
-      // Signals travelling along strands
+      // During a boost the node sends out two expanding rings
+      if (boost > 0.01) {
+        for (let i = 0; i < 2; i++) {
+          const f = (ping + i / 2) % 1;
+          ctx.globalAlpha = fade * boost * (1 - f) * 0.5;
+          ctx.beginPath();
+          ctx.arc(0, 0, 10 + f * 110, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+
+      // Signals travelling along strands. The first few are always there;
+      // the rest fade in with the boost and are drawn as streaks.
       ctx.fillStyle = '#fff';
-      for (const sp of sparks) {
-        if (sp.p <= 0 || sp.p >= 1) continue;
+      const extra = smooth(boost);
+      for (let n = 0; n < sparks.length; n++) {
+        const sp = sparks[n];
+        const share = n < baseSparks ? 1 : extra;
+        if (share <= 0.01 || sp.p <= 0 || sp.p >= 1) continue;
         const a = Math.sqrt(C * sp.k);
         const lim = R / (a * Math.SQRT2);
         if (lim <= 1) continue;
         const U = Math.acosh(lim);
-        const edge = smooth(sp.p / 0.14) * (1 - smooth((sp.p - 0.86) / 0.14));
+        const edge = smooth(sp.p / 0.14) * (1 - smooth((sp.p - 0.86) / 0.14)) * share;
+
+        if (boost > 0.02) {
+          const steps = 14;
+          ctx.lineWidth = 1.3 / zoom;
+          for (let t = 0; t < steps; t++) {
+            const p1 = point(sp.s, a, U * (2 * (sp.p - t * 0.0075) - 1));
+            const p2 = point(sp.s, a, U * (2 * (sp.p - (t + 1) * 0.0075) - 1));
+            ctx.globalAlpha = fade * grow * edge * boost * Math.pow(1 - t / steps, 1.6) * 0.9;
+            ctx.beginPath();
+            ctx.moveTo(p1[0], p1[1]);
+            ctx.lineTo(p2[0], p2[1]);
+            ctx.stroke();
+          }
+        }
         for (let t = 0; t < 8; t++) {
           const p = point(sp.s, a, U * (2 * (sp.p - t * 0.006) - 1));
           ctx.globalAlpha = fade * grow * edge * (1 - t / 8) * (t ? 0.5 : 1);
@@ -366,16 +404,24 @@
       raf = 0;
       const dt = Math.min(0.05, last ? (now - last) / 1000 : 0.016);
       last = now;
-      phase += dt * 0.1;
+      // Ease towards the boost target: quick to build, slower to settle.
+      boost = lerp(boost, boostT, boostT > boost ? 0.07 : 0.035);
+      if (Math.abs(boost - boostT) < 0.002) boost = boostT;
+      ping = (ping + dt * 0.9) % 1;
+      phase += dt * (0.1 + boost * 0.85);
       if (phase >= 1) phase -= 1;
       // The intro runs on the clock, not on frame count, so a slow device still finishes on time.
       if (started && reveal < 1) reveal = clamp((now - startedAt) / 2600);
       rot = lerp(rot, rotT, 0.04);
       ox = lerp(ox, oxT, 0.04);
       oy = lerp(oy, oyT, 0.04);
-      for (const sp of sparks) {
-        sp.p += dt * sp.v;
-        if (sp.p >= 1) Object.assign(sp, newSpark());
+      for (let n = 0; n < sparks.length; n++) {
+        const sp = sparks[n];
+        sp.p += dt * sp.v * (1 + boost * 2.4);
+        if (sp.p >= 1) {
+          Object.assign(sp, newSpark());
+          if (n >= baseSparks) sp.p = -Math.random() * 0.12;   // pool signals come straight back
+        }
       }
       draw();
       if (visible && !reduced()) raf = requestAnimationFrame(frame);
@@ -415,6 +461,16 @@
       }, { passive: true });
       hero.addEventListener('pointerleave', () => { rotT = 0; oxT = 0; oyT = 0; });
     }
+
+    // Hovering or focusing an Apply button boosts the figure.
+    $$('a.btn[href="#apply"]:not([data-apply])').forEach((btn) => {
+      const on = () => { boostT = 1; play(); };
+      const off = () => { boostT = 0; };
+      btn.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') on(); });
+      btn.addEventListener('pointerleave', off);
+      btn.addEventListener('focus', on);
+      btn.addEventListener('blur', off);
+    });
   }
 
   /* ---------- Management figure: four arms drawn in towards one node ----------
@@ -457,21 +513,48 @@
              'L' + (c + dx * r0 + nx * d).toFixed(2) + ' ' + (c + dy * r0 + ny * d).toFixed(2),
           stroke: 'url(#xd-grad-' + a + ')'
         }, svg);
-        line.style.setProperty('--len', len);
-        line.style.setProperty('--a', a);
-        line.style.setProperty('--j', Math.abs(j - (lines - 1) / 2));
+        // A second, invisible copy of the line carries the light that runs along it on hover.
+        const pulse = make('path', { class: 'xd-pulse', d: line.getAttribute('d') }, svg);
+        [line, pulse].forEach((p) => {
+          p.style.setProperty('--len', len);
+          p.style.setProperty('--a', a);
+          p.style.setProperty('--j', Math.abs(j - (lines - 1) / 2));
+        });
       }
     });
 
     make('circle', { class: 'xd-orbit', cx: c, cy: c, r: 44 }, svg);
     make('circle', { class: 'xd-core', cx: c, cy: c, r: 11 }, svg);
     make('circle', { class: 'xd-dot', cx: c, cy: c, r: 2.4 }, svg);
-    fig.appendChild(svg);
-
     const you = document.createElement('span');
     you.className = 'mgmt__you';
     you.textContent = 'You';
-    fig.appendChild(you);
+
+    // The drawing and its label share one stage, so they lean together.
+    const stage = document.createElement('div');
+    stage.className = 'xd-stage';
+    stage.appendChild(svg);
+    stage.appendChild(you);
+    fig.appendChild(stage);
+
+    // Hover, mouse only: the figure leans towards the pointer and the centre dot
+    // follows it. The light running along the arms is handled in CSS.
+    if (mqFine.matches) {
+      const lean = (rx, ry, px, py) => {
+        stage.style.setProperty('--rx', rx);
+        stage.style.setProperty('--ry', ry);
+        stage.style.setProperty('--px', px);
+        stage.style.setProperty('--py', py);
+      };
+      fig.addEventListener('pointermove', (e) => {
+        if (reduced() || e.pointerType !== 'mouse') return;
+        const r = fig.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;   // -0.5 at the left edge, 0.5 at the right
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        lean((-py * 16).toFixed(2), (px * 16).toFixed(2), (px * 12).toFixed(2), (py * 12).toFixed(2));
+      });
+      fig.addEventListener('pointerleave', () => lean(0, 0, 0, 0));
+    }
   }
 
   /* ---------- Accordions ---------- */
