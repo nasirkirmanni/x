@@ -860,10 +860,10 @@
     else resizeFns.push(build);
   }
 
-  /* ---------- Footer word: letters rise out of the page's edge, then a light moves across them ----------
+  /* ---------- Footer word: a light moves across the letters ----------
      Two identical layers of letters: a dim one, and a white one that only shows inside a
      soft circle of light. The light drifts on its own, and follows the pointer while the
-     pointer is over the footer. */
+     pointer is over the footer. It only runs while the word is on screen. */
   function footWord() {
     const el = $('[data-footword]');
     if (!el) return;
@@ -908,12 +908,11 @@
     };
     paint();
 
-    if (!('IntersectionObserver' in window)) { el.classList.add('in'); return; }
+    if (!('IntersectionObserver' in window)) return;
     new IntersectionObserver((entries) => {
       visible = entries[0].isIntersecting;
-      if (visible) el.classList.add('in');
       play();
-    }, { threshold: 0.25 }).observe(el);
+    }).observe(el);
     document.addEventListener('visibilitychange', play);
 
     if (mqFine.matches) {

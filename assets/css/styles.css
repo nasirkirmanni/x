@@ -233,22 +233,18 @@ main, .foot { position: relative; z-index: 1; }
   padding: 0 .45rem 0 1.1rem;
   border-radius: 999px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, .09) 0%, rgba(255, 255, 255, .02) 52%, rgba(255, 255, 255, .05) 100%),
-    rgba(10, 10, 10, .42);
+    linear-gradient(180deg, rgba(255, 255, 255, .06) 0%, rgba(255, 255, 255, .015) 60%),
+    rgba(10, 10, 10, .5);
   -webkit-backdrop-filter: blur(12px) saturate(180%) brightness(1.08);
   backdrop-filter: blur(12px) saturate(180%) brightness(1.08);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, .2),
-    inset 0 -1px 1px rgba(255, 255, 255, .06),
-    inset 0 0 20px rgba(255, 255, 255, .05),
-    0 12px 32px -8px rgba(0, 0, 0, .7),
-    0 0 0 .5px rgba(0, 0, 0, .8);
+  box-shadow: 0 10px 30px -12px rgba(0, 0, 0, .9);   /* a soft lift only; the edge is drawn below */
 }
-/* The rim: brightest where light would catch the curve, top left and bottom right. */
+/* The edge: one hairline, lit from above. Faintly brighter along the top, fading down the
+   ends and nearly gone along the bottom, so it reads as light on glass, not a drawn border. */
 .nav__bar::before {
   content: ""; position: absolute; inset: 0; z-index: -1;
   padding: 1px; border-radius: inherit;
-  background: linear-gradient(115deg, rgba(255, 255, 255, .55) 0%, rgba(255, 255, 255, .14) 16%, rgba(255, 255, 255, .05) 42%, rgba(255, 255, 255, .05) 62%, rgba(255, 255, 255, .16) 86%, rgba(255, 255, 255, .42) 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .15) 0%, rgba(255, 255, 255, .07) 30%, rgba(255, 255, 255, .035) 70%, rgba(255, 255, 255, .05) 100%);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -259,7 +255,7 @@ main, .foot { position: relative; z-index: 1; }
 .nav__bar::after {
   content: ""; position: absolute; inset: 0; z-index: -1;
   border-radius: inherit;
-  background: radial-gradient(12rem circle at var(--gx, 50%) var(--gy, 0%), rgba(255, 255, 255, .11), transparent 65%);
+  background: radial-gradient(12rem circle at var(--gx, 50%) var(--gy, 0%), rgba(255, 255, 255, .07), transparent 65%);
   opacity: 0; transition: opacity .5s var(--ease);
   pointer-events: none;
 }
@@ -268,7 +264,7 @@ main, .foot { position: relative; z-index: 1; }
    still frosted enough that text scrolling underneath never competes with the bar's own. */
 .has-lens .nav__bar {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, .08) 0%, rgba(255, 255, 255, .02) 52%, rgba(255, 255, 255, .05) 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, .06) 0%, rgba(255, 255, 255, .015) 60%),
     rgba(10, 10, 10, .48);
   -webkit-backdrop-filter: url(#nav-lens) blur(2.5px) saturate(160%) brightness(1.12);
   backdrop-filter: url(#nav-lens) blur(2.5px) saturate(160%) brightness(1.12);
@@ -429,7 +425,7 @@ html:not(.js) .burger { display: none; } /* the menu needs JS; without it the pa
 /* ---------- 01 Position ---------- */
 /* Words start grey and turn white as you read down (set by JS), as on terafab.ai. */
 .position .statement { max-width: 24em; }
-.statement .mw { transition: opacity 1.4s linear; }   /* each word takes 1.4s to light, trailing the scroll */
+.statement .mw { transition: opacity .3s linear; }
 .notes { display: grid; gap: 1.5rem; margin-top: clamp(2.5rem, 5vw, 4rem); }
 .notes li { padding-top: 1.1rem; border-top: 1px solid var(--line-2); }
 .notes__t { margin-bottom: .35rem; font-size: .9375rem; font-weight: 500; color: var(--white); }
@@ -934,9 +930,8 @@ a.card:focus-visible .card__media img { filter: grayscale(1) contrast(1.06) brig
 }
 
 /* The word at the very end. It spans the content width, guide to guide, and its letters
-   stand on the page's bottom edge. When the footer comes into view the letters rise out of
-   that edge one by one; then a soft light drifts across them, and follows the pointer while
-   it is over the footer (footWord() in main.js). */
+   stand on the page's bottom edge. It is always in place; a soft light drifts across the
+   letters, and follows the pointer while it is over the footer (footWord() in main.js). */
 .foot__end { container-type: inline-size; margin-top: clamp(3.5rem, 8vw, 7rem); }
 .foot__word {
   position: relative;
@@ -958,12 +953,9 @@ a.card:focus-visible .card__media img { filter: grayscale(1) contrast(1.06) brig
   mask-image: radial-gradient(circle 18vw at var(--fx, 50%) var(--fy, 60%), #000 0%, rgba(0, 0, 0, .5) 38%, transparent 100%);
   mask-image: radial-gradient(circle 20cqi at var(--fx, 50%) var(--fy, 60%), #000 0%, rgba(0, 0, 0, .5) 38%, transparent 100%);
 }
-.js .fw__ch { transform: translateY(105%); transition: transform 1.4s var(--ease) calc(var(--i, 0) * 60ms); }
-.js .foot__word.in .fw__ch { transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .fw__lit { display: none; }
   .fw__base { color: #4a4a4a; }
-  .js .fw__ch { transform: none; }
 }
 
 /* ---------- Cursor (fine pointers only, enabled by JS) ---------- */
