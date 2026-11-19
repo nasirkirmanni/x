@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Tech & fintech creator management — interactions
+   Tech & fintech creator management: interactions
    No dependencies. Without JavaScript the page is a complete static document.
    ========================================================================== */
 (() => {
@@ -48,7 +48,7 @@
     root.classList.toggle('has-name', !!name);
     $$('[data-site="name"]').forEach((el) => { el.textContent = name; });
     $$('[data-site="legal"]').forEach((el) => { el.textContent = legal ? legal + '.' : ''; });
-    if (name) document.title = name + ' — ' + document.title;
+    if (name) document.title = name + ' · ' + document.title;
 
     if (email) {
       $$('[data-site="email"]').forEach((a) => { a.textContent = email; a.href = 'mailto:' + email; });
