@@ -1238,26 +1238,7 @@
     });
   }
 
-  /* ---------- Cursor dot and magnetic buttons (mouse only) ---------- */
-  function cursor() {
-    const dot = $('[data-cursor]');
-    if (!dot || !mqFine.matches || reduced()) return;
-    let shown = false;
-    window.addEventListener('pointermove', (e) => {
-      if (e.pointerType !== 'mouse') return;
-      if (!shown) { shown = true; root.classList.add('has-cursor'); }
-      dot.style.setProperty('--cx', e.clientX + 'px');
-      dot.style.setProperty('--cy', e.clientY + 'px');
-      const target = e.target instanceof Element ? e.target : null;
-      const field = target && target.closest('input, textarea, select');
-      const active = target && target.closest('a, button, label');
-      dot.classList.toggle('is-hidden', !!field);
-      dot.classList.toggle('is-hover', !!active && !field);
-    }, { passive: true });
-    root.addEventListener('mouseleave', () => dot.classList.add('is-hidden'));
-    root.addEventListener('mouseenter', () => dot.classList.remove('is-hidden'));
-  }
-
+  /* ---------- Magnetic buttons (mouse only) ---------- */
   function magnetic() {
     if (!mqFine.matches || reduced()) return;
     $$('[data-magnetic]').forEach((el) => {
@@ -1290,7 +1271,6 @@
   beliefs();
   footWord();
   applyForm();
-  cursor();
   magnetic();
   intro();
   requestScroll();
