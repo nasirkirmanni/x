@@ -2,8 +2,20 @@
   "redirects": [
     {
       "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.aezmo.com" }],
+      "destination": "https://aezmo.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "tech-fintech-creators.vercel.app" }],
+      "destination": "https://aezmo.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
       "has": [{ "type": "host", "value": "ai-creator-management.vercel.app" }],
-      "destination": "https://tech-fintech-creators.vercel.app/$1",
+      "destination": "https://aezmo.com/$1",
       "permanent": true
     }
   ]

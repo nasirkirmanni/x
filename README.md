@@ -4,13 +4,11 @@ A single-page static site. No build step and no dependencies: plain HTML, CSS an
 
 ## Live site
 
-https://tech-fintech-creators.vercel.app
+https://aezmo.com
 
 It is hosted on Vercel, in the project `tech-fintech-creators`. The GitHub repo is connected to that project, so every push to `main` redeploys the site. To deploy by hand from this folder, run `vercel deploy --prod`.
 
-The address is a placeholder. Rename the project in Vercel, or add your own domain there, once the agency has a name.
-
-The first address, `ai-creator-management.vercel.app`, forwards to the current one. That rule is in `vercel.json`.
+The domain is registered at GoDaddy, which also runs its DNS: two A records for `@` (216.198.79.1 and 64.29.17.1) and a CNAME for `www` pointing at Vercel. `www.aezmo.com` and the old Vercel addresses (`tech-fintech-creators.vercel.app`, `ai-creator-management.vercel.app`) forward to https://aezmo.com. Those rules are in `vercel.json`.
 
 ## View it locally
 
@@ -43,7 +41,7 @@ A grid of post cards: who posted, the opening words, a still from the post, and 
 
 It is **switched off until `assets/js/posts.js` lists at least one post**. With the list empty, the section and its "Work" links are not on the page at all, and the other sections keep their numbers.
 
-To see the layout before you have posts, add `?wall=sample` to the address, for example `https://tech-fintech-creators.vercel.app/?wall=sample#work`. That shows placeholder cards, each labelled "Sample".
+To see the layout before you have posts, add `?wall=sample` to the address, for example `https://aezmo.com/?wall=sample#work`. That shows placeholder cards, each labelled "Sample".
 
 To switch it on:
 
