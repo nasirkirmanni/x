@@ -394,24 +394,125 @@
     });
   }
 
-  /* ---------- The line under the hero: the light moves from Hollywood to X ----------
-     "Hollywood has its agents." starts lit. Once the line is past 70% of the screen's
-     height, the light runs off the end of that sentence and along "X has Aezmo.", which
-     stays lit (the timing is in the CSS). It goes back only when the line is scrolled down
-     to the bottom tenth of the screen again, so it plays once each time you arrive. */
+  /* ---------- The line under the hero: a light that passes over it, turn by turn ----------
+     Both sentences rest in grey. Two white copies of the line lie on top, each masked to a
+     soft circle of light (as on the footer word) and to the one line of text it is passing
+     over, so a light never spills onto the line above or below. Each line of text gets a
+     turn: a light enters on its left, glides along it and leaves on its right. The next
+     line's light sets off while the last one is still on its final letters, so the shine
+     never stops: "Hollywood has its agents.", then "X has Aezmo.", then round again. On
+     phones, where the first sentence wraps, each of its two lines gets its own turn. The
+     light runs only while the line is on screen, and starts again from the first line each
+     time you arrive. */
   function interlude() {
     const el = $('[data-interlude]');
     if (!el || reduced()) return;
     const line = $('.interlude__line', el);
+    const parts = line ? $$('.interlude__a, .interlude__b', line) : [];
+    if (parts.length < 2) return;
+
+    // The white copies draw their words with CSS (data-text), so the page's text, search
+    // and copying still see the line once.
+    const lights = [0, 1].map(() => {
+      const lit = document.createElement('span');
+      lit.className = 'interlude__lit';
+      lit.setAttribute('aria-hidden', 'true');
+      parts.forEach((part) => {
+        const copy = document.createElement('span');
+        copy.className = part.className;
+        copy.dataset.text = part.textContent;
+        lit.appendChild(copy);
+      });
+      line.appendChild(lit);
+      return lit;
+    });
     el.classList.add('is-live');
-    const update = (y, vh) => {
-      const r = line.getBoundingClientRect();
-      const mid = r.top + r.height / 2;
-      if (mid < vh * 0.7) el.classList.add('is-on');
-      else if (mid > vh * 0.9) el.classList.remove('is-on');
+
+    // The turns: one per line of text, in reading order, each with its start time and length.
+    let turns = [], cycle = 1, radius = 0;
+    const measure = () => {
+      const box = line.getBoundingClientRect();
+      const fs = parseFloat(getComputedStyle(line).fontSize) || 40;
+      radius = Math.max(fs * 3.2, box.width * 0.16);
+      const speed = fs * 3.4;                    // px a second
+      const handover = (radius * 1.3) / speed;   // seconds two lights share
+      const rows = [];
+      parts.forEach((part) => {
+        const range = document.createRange();
+        range.selectNodeContents(part);
+        Array.from(range.getClientRects()).forEach((r) => {
+          if (r.width < 1) return;
+          const y = r.top - box.top + r.height / 2;
+          const last = rows[rows.length - 1];
+          if (last && Math.abs(last.y - y) < r.height / 2) {        // same line of text
+            last.x0 = Math.min(last.x0, r.left - box.left);
+            last.x1 = Math.max(last.x1, r.right - box.left);
+          } else rows.push({ x0: r.left - box.left, x1: r.right - box.left, y, top: r.top - box.top, bottom: r.bottom - box.top });
+        });
+      });
+      // Each line's light is kept between the bottom of the line above (where its
+      // descenders end) and its own bottom; the first and last lines are open-ended.
+      let t = 0;
+      turns = rows.map((row, i) => {
+        const from = row.x0 - radius, to = row.x1 + radius;
+        const top = i ? Math.max(row.top, rows[i - 1].bottom).toFixed(1) + 'px' : '-100%';
+        const bottom = i < rows.length - 1 ? row.bottom.toFixed(1) + 'px' : '200%';
+        const turn = { from, to, y: row.y, top, bottom, start: t, len: (to - from) / speed };
+        t += turn.len - handover;
+        return turn;
+      });
+      cycle = Math.max(1, t);
+      line.style.setProperty('--lr', radius.toFixed(1) + 'px');
     };
-    scrollFns.push(update);
-    update(window.scrollY, window.innerHeight);
+
+    // Where each light is at time t: turn k (counting on through the cycles) uses light k % 2.
+    const paint = (t) => {
+      const on = [null, null];
+      const round = Math.floor(t / cycle);
+      for (let c = round - 1; c <= round; c++) {
+        turns.forEach((turn, i) => {
+          const p = (t - c * cycle - turn.start) / turn.len;
+          if (c < 0 || p < 0 || p > 1) return;
+          on[(c * turns.length + i) % 2] = { turn, x: lerp(turn.from, turn.to, p) };
+        });
+      }
+      lights.forEach((lit, n) => {
+        const it = on[n];
+        lit.style.setProperty('--x', it ? it.x.toFixed(1) + 'px' : '-300%');
+        if (!it) return;
+        lit.style.setProperty('--y', it.turn.y.toFixed(1) + 'px');
+        lit.style.setProperty('--top', it.turn.top);
+        lit.style.setProperty('--bot', it.turn.bottom);
+      });
+    };
+
+    let visible = false, raf = 0, t0 = 0;
+    const frame = (now) => {
+      raf = 0;
+      paint((now - t0) / 1000);
+      if (visible && !document.hidden && !reduced()) raf = requestAnimationFrame(frame);
+    };
+    const play = () => {
+      if (!raf && visible && !document.hidden && !reduced()) raf = requestAnimationFrame(frame);
+    };
+
+    measure();
+    paint(0);
+    resizeFns.push(measure);
+    document.addEventListener('site:ready', measure);
+    document.addEventListener('visibilitychange', play);
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        const was = visible;
+        visible = entries[0].isIntersecting;
+        if (visible && !was) t0 = performance.now();
+        play();
+      }).observe(line);
+    } else {
+      visible = true;
+      t0 = performance.now();
+      play();
+    }
   }
 
   /* ---------- Hero figure: a field of hyperbolas whose asymptotes draw the X ----------

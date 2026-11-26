@@ -425,40 +425,49 @@ html:not(.js) .burger { display: none; } /* the menu needs JS; without it the pa
 /* ---------- The line under the hero ----------
    "Hollywood has its agents. X has Aezmo." at the hero's size, alone on the screen, with
    the first sentence on the left guide and the second on the right. Without JavaScript, or
-   with reduced motion, the first sentence is grey and the second white. With JavaScript the
-   first sentence starts lit; when the line nears the middle of the screen, the light runs
-   off the end of it and along the second (interlude() in main.js adds .is-on). Scrolling
-   back below the line puts the light back. Browsers that cannot animate --xa and --xb
-   switch straight to the end state. */
-@property --xa { syntax: "<percentage>"; inherits: true; initial-value: -20%; }
-@property --xb { syntax: "<percentage>"; inherits: true; initial-value: -20%; }
+   with reduced motion, the first sentence is grey and the second white.
+   With JavaScript both sentences rest in grey and a soft light keeps passing over them,
+   turn by turn, like the light on the footer word: along each line of text from left to
+   right, the next one starting as the last fades, then round again. interlude() in main.js
+   lays two white copies of the line (.interlude__lit) over the grey one. Each is masked to
+   a circle of light at --x/--y (radius --lr) and to the band of the line of text it is
+   passing over (--top to --bot), so a light never spills onto its neighbours. */
 .interlude {
   display: grid; align-content: center;
   min-height: 86vh; min-height: 86svh;
   padding-block: clamp(4rem, 8vw, 6rem);
 }
-.interlude.is-live { --xa: -20%; --xb: -20%; transition: --xa 1s var(--ease-io) .3s, --xb 1s var(--ease-io); }
-.interlude.is-live.is-on { --xa: 120%; --xb: 120%; transition: --xa 1.1s var(--ease-io) .1s, --xb 1.3s var(--ease-io) .6s; }
 .interlude__line {
+  position: relative;
   display: grid; gap: .18em;
   font-size: var(--fs-hero); font-weight: 300; line-height: 1.04; letter-spacing: -.035em;
   text-wrap: balance;
 }
 .interlude__a { justify-self: start; color: var(--dim); }
 .interlude__b { justify-self: end; text-align: end; color: var(--white); }
-.interlude.is-live :is(.interlude__a, .interlude__b) {
-  color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
+.interlude.is-live .interlude__line > .interlude__a { color: #626262; }
+.interlude.is-live .interlude__line > .interlude__b { color: #8c8c8c; }
+.interlude__lit {
+  --spot: #000 0%, rgba(0, 0, 0, .55) 40%, transparent 100%;
+  position: absolute; inset: 0;
+  display: grid; gap: inherit;
+  pointer-events: none; user-select: none;
+  --band: transparent var(--top, -100%), #000 var(--top, -100%), #000 var(--bot, 200%), transparent calc(var(--bot, 200%) + 2px);
+  -webkit-mask-image:
+    radial-gradient(circle var(--lr, 10rem) at var(--x, -300%) var(--y, 50%), var(--spot)),
+    linear-gradient(var(--band));
+  -webkit-mask-composite: source-in;
+  mask-image:
+    radial-gradient(circle var(--lr, 10rem) at var(--x, -300%) var(--y, 50%), var(--spot)),
+    linear-gradient(var(--band));
+  mask-composite: intersect;
 }
-.interlude.is-live .interlude__a {
-  background-image: linear-gradient(90deg, var(--dim) calc(var(--xa, -20%) - 16%), var(--white) calc(var(--xa, -20%) + 16%));
-}
-.interlude.is-live .interlude__b {
-  background-image: linear-gradient(90deg, var(--white) calc(var(--xb, -20%) - 16%), rgba(255, 255, 255, .28) calc(var(--xb, -20%) + 16%));
-}
-@media (forced-colors: active) {
-  .interlude.is-live :is(.interlude__a, .interlude__b) { color: CanvasText; background: none; }
+.interlude__lit > span { color: var(--white); }
+.interlude__lit > span::before { content: attr(data-text); }
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+  .interlude__lit { display: none; }
+  .interlude.is-live .interlude__line > .interlude__a { color: var(--dim); }
+  .interlude.is-live .interlude__line > .interlude__b { color: var(--white); }
 }
 
 /* ---------- 01 Position ---------- */
