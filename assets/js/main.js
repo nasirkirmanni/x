@@ -434,7 +434,7 @@
       const box = line.getBoundingClientRect();
       const fs = parseFloat(getComputedStyle(line).fontSize) || 40;
       radius = Math.max(fs * 3.2, box.width * 0.16);
-      const speed = fs * 3.4;                    // px a second
+      const speed = fs * 7.5;                    // px a second: about 420 on a desktop screen
       const handover = (radius * 1.3) / speed;   // seconds two lights share
       const rows = [];
       parts.forEach((part) => {
