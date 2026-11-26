@@ -217,7 +217,7 @@
       return cell;
     };
 
-    // The last place on the wall is open, and leads to the application form.
+    // The last place on the wall is open, and leads to the booking form.
     const invite = (i) => {
       const cell = el('li', 'wall__cell wall__cell--invite');
       const box = el('a', 'card card--invite');
@@ -226,14 +226,14 @@
       const line = el('p', 'card__line', 'The next post here could be ');
       const cta = el('span', 'card__cta');
       const go = el('span', 'card__go');
-      box.href = '#apply';
+      box.href = '#book';
       cell.setAttribute('data-reveal', '');
       cell.style.setProperty('--d', (i % 3) * 90 + 'ms');
       plus.setAttribute('aria-hidden', 'true');
-      label.append(plus, document.createTextNode('Applications open'));
+      label.append(plus, document.createTextNode('Booking calls'));
       line.appendChild(el('em', '', 'yours.'));
       go.appendChild(icon('i-arrow'));
-      cta.append(el('span', '', 'Apply for representation'), go);
+      cta.append(el('span', '', 'Book a call'), go);
       box.append(label, line, cta);
       cell.appendChild(box);
       return cell;
@@ -653,7 +653,7 @@
     }
 
     // Hovering or focusing an Apply button boosts the figure.
-    $$('a.btn[href="#apply"]:not([data-apply])').forEach((btn) => {
+    $$('a.btn[href="#book"]:not([data-apply])').forEach((btn) => {
       const on = () => { boostT = 1; play(); };
       const off = () => { boostT = 0; };
       btn.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') on(); });
@@ -1065,7 +1065,7 @@
     }
   }
 
-  /* ---------- Application form ---------- */
+  /* ---------- Booking form ---------- */
   function applyForm() {
     const form = $('[data-form]');
     if (!form) return;
@@ -1077,7 +1077,7 @@
     const done = $('[data-form-done]');
     const demo = $('[data-form-demo]');
     const submit = $('button[type="submit"]', form);
-    const labels = { creator: 'Send application', brand: 'Send enquiry' };
+    const labels = { creator: 'Book a call', brand: 'Book a call' };
 
     const setKind = (kind, focus) => {
       tabs.forEach((tab) => {

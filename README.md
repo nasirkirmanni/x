@@ -33,7 +33,7 @@ The `<title>` and `og:site_name` in `index.html` also say Aezmo, so search engin
 
 ## Connect the form
 
-The form sends to Formspree, to the form "Aezmo applications". Its address is `formEndpoint` in `site.config.js`. Each application, from a creator or a brand, is emailed to the inbox on the Formspree account and kept in the Formspree dashboard. Spam is caught by a hidden trap field on the page and by Formspree's Formshield filter; Formspree's CAPTCHA is off, because the form sends in the background and can't show one.
+The form sends to Formspree, to the form "Aezmo applications". Its address is `formEndpoint` in `site.config.js`. Each call request, from a creator or a brand, is emailed to the inbox on the Formspree account and kept in the Formspree dashboard. Spam is caught by a hidden trap field on the page and by Formspree's Formshield filter; Formspree's CAPTCHA is off, because the form sends in the background and can't show one.
 
 If `formEndpoint` is ever emptied, the form falls back to **preview mode**: it validates, shows the confirmation, says plainly that nothing was sent, and sends nothing.
 
@@ -63,7 +63,7 @@ Rules worth keeping:
 - [ ] Legal name for the footer, once the company is registered (until then it shows "Aezmo")
 - [ ] Contact email and X handle in `site.config.js`
 - [x] Form connected to Formspree and tested (the test landed in Formspree's Spam folder; check it now and then)
-- [x] A privacy notice page (`privacy.html`, served at /privacy), linked under the form and in the footer. Keep its promises: delete applications after 12 months unless you work together, and answer data requests within a month. Update it if you add a tool that handles visitor data.
+- [x] A privacy notice page (`privacy.html`, served at /privacy), linked under the form and in the footer. Keep its promises: delete call requests after 12 months unless you work together, and answer data requests within a month. Update it if you add a tool that handles visitor data.
 - [x] Commercial terms in the Questions section confirmed (16 Nov 2026): commission-based pay and exclusive representation
 - [ ] A share image (`og:image`) for social previews
 - [ ] The final logo. The current mark is a placeholder; have the final one checked against existing trademarks.
