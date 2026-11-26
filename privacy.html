@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Privacy · Aezmo</title>
+  <meta name="description" content="How Aezmo handles the information you send through the form on aezmo.com.">
+  <meta name="theme-color" content="#000000">
+  <meta name="color-scheme" content="dark">
+  <link rel="canonical" href="https://aezmo.com/privacy">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,200..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round">
+      <path vector-effect="non-scaling-stroke" d="M5.21 5.21 18.79 18.79M7.05 3.37 20.63 16.95M3.37 7.05 16.95 20.63"/>
+      <path vector-effect="non-scaling-stroke" d="M18.79 5.21 14.97 9.03M9.03 14.97 5.21 18.79M20.63 7.05 16.81 10.87M10.87 16.81 7.05 20.63M16.95 3.37 13.13 7.19M7.19 13.13 3.37 16.95"/>
+    </symbol>
+  </svg>
+
+  <header class="wrap privacy-top">
+    <a class="brand" href="/" aria-label="Aezmo home">
+      <svg class="mark" aria-hidden="true"><use href="#mark"/></svg>
+      <span class="brand__name">Aezmo</span>
+    </a>
+    <a class="link" href="/">Back to the site</a>
+  </header>
+
+  <main class="wrap">
+    <article class="privacy">
+      <p class="tag privacy__label">Privacy</p>
+      <h1 class="privacy__title">How we handle <em>what you send&nbsp;us.</em></h1>
+      <p class="privacy__date">Last updated 26 November 2026</p>
+      <p class="privacy__intro">This page explains what happens to the information you give us through the form on aezmo.com. It is short because we collect very little.</p>
+
+      <section class="privacy__sec">
+        <h2>Who we are</h2>
+        <p>Aezmo is a management and representation agency for technology and fintech creators on X. In this notice, “we” and “us” mean Aezmo.</p>
+      </section>
+
+      <section class="privacy__sec">
+        <h2>What we collect</h2>
+        <p>Only what you type into the form on this site.</p>
+        <ul>
+          <li><strong>If you apply as a creator:</strong> your name, X handle, email address, audience size, what you are known for and, if you tell us, what you want from management.</li>
+          <li><strong>If you contact us as a brand:</strong> your name, company, work email, who you need to reach, your timing and anything else you add.</li>
+        </ul>
+        <p>This site sets no cookies and uses no analytics or advertising trackers.</p>
+      </section>
+
+      <section class="privacy__sec">
+        <h2>Why we use it</h2>
+        <p>To read your application or enquiry and reply to you. If we go on to work together, we also use it to set that up. We do not sell it, share it for marketing, or add you to a mailing list.</p>
+      </section>
+
+      <section class="privacy__sec">
+        <h2>Who else handles it</h2>
+        <p>A few services run parts of this site for us.</p>
+        <ul>
+          <li><strong>Formspree</strong> receives the form, emails it to us and keeps a copy in our account.</li>
+          <li><strong>Vercel</strong> hosts the site. Like any web host, it handles technical details such as your IP address when you visit.</li>
+          <li><strong>Google Fonts</strong> supplies the typeface, so your browser connects to Google when a page loads.</li>
+        </ul>
+        <p>These companies may process data outside your country, including in the United States.</p>
+      </section>
+
+      <section class="privacy__sec">
+        <h2>How long we keep it</h2>
+        <p>Up to 12 months, and then we delete it, unless we go on to work together.</p>
+      </section>
+
+      <section class="privacy__sec">
+        <h2>Your choices</h2>
+        <p>You can ask us what we hold about you, ask us to correct it, or ask us to delete it. Reply to any email we have sent you, or send us a note through the <a href="/#apply">form on this site</a><span hidden data-if="email">, or email <a data-site="email" href="#"></a></span>. We will answer within a month.</p>
+      </section>
+
+      <section class="privacy__sec">
+        <h2>Changes</h2>
+        <p>If we change this notice, we will update the date at the top of this page.</p>
+      </section>
+    </article>
+  </main>
+
+  <footer class="wrap privacy-foot">
+    <p>© <span data-year>2026</span> Aezmo.</p>
+    <p>Independent. Not affiliated with X Corp. "X" is a trademark of X Corp.</p>
+  </footer>
+
+  <script src="assets/js/site.config.js"></script>
+  <script>
+    (function () {
+      var year = document.querySelector('[data-year]');
+      if (year) year.textContent = new Date().getFullYear();
+      var email = ((window.SITE || {}).email || '').trim();
+      if (!email) return;
+      document.querySelectorAll('[data-site="email"]').forEach(function (a) { a.textContent = email; a.href = 'mailto:' + email; });
+      document.querySelectorAll('[data-if="email"]').forEach(function (el) { el.hidden = false; });
+    })();
+  </script>
+</body>
+</html>

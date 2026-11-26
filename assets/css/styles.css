@@ -1089,3 +1089,26 @@ html:not(.js) .flow__art:not([data-art="3"]) { display: none; }
   .js [data-reveal], .js [data-intro], .js .nav, .js [data-split] .wi, .js .sec-head__rule { opacity: 1 !important; transform: none !important; }
   .statement .mw { opacity: 1 !important; }
 }
+
+/* ---------- Privacy page, and links to it from the form and footer ---------- */
+.privacy-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 1rem; border-bottom: 1px solid var(--line); }
+.privacy { max-width: 42rem; padding-block: clamp(3rem, 7vw, 5.5rem) var(--pad); }
+.privacy__label { margin-bottom: 1.25rem; }
+.privacy__title { font-size: var(--fs-h2); font-weight: 300; line-height: 1.08; letter-spacing: -.035em; color: var(--white); }
+.privacy__title em { font-style: normal; color: var(--dim); }
+.privacy__date { margin-top: 1.25rem; font-size: var(--fs-small); color: var(--dim); }
+.privacy__intro { margin-top: 2rem; font-size: var(--fs-lead); color: var(--paper); }
+.privacy__sec { margin-top: clamp(2.25rem, 4vw, 3rem); padding-top: clamp(1.25rem, 2vw, 1.5rem); border-top: 1px solid var(--line); }
+.privacy__sec h2 { margin-bottom: .75rem; font-size: var(--fs-h3); font-weight: 400; letter-spacing: -.02em; color: var(--white); }
+.privacy__sec p, .privacy__sec li { color: var(--mute); }
+.privacy__sec p + p, .privacy__sec p + ul, .privacy__sec ul + p { margin-top: .85rem; }
+.privacy__sec ul { display: grid; gap: .6rem; }
+.privacy__sec li { position: relative; padding-left: 1.25rem; }
+.privacy__sec li::before { content: ""; position: absolute; left: 0; top: .8em; width: .5rem; height: 1px; background: var(--line-3); }
+.privacy__sec strong { font-weight: 500; color: var(--paper); }
+.privacy__sec a, .form__note a, .foot__legal a {
+  color: var(--paper); text-decoration: underline; text-decoration-color: var(--line-3);
+  text-decoration-thickness: 1px; text-underline-offset: .22em; transition: color var(--t-fast), text-decoration-color var(--t-fast);
+}
+.privacy__sec a:hover, .form__note a:hover, .foot__legal a:hover { color: var(--white); text-decoration-color: currentColor; }
+.privacy-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 2rem; padding-block: 1.5rem 2.5rem; border-top: 1px solid var(--line); font-size: var(--fs-small); color: var(--dim); }
