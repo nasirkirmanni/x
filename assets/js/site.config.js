@@ -15,5 +15,5 @@ window.SITE = {
   legalName: "",
   email: "",
   xHandle: "",
-  formEndpoint: ""
+  formEndpoint: "https://formspree.io/f/mrpqjdye"
 };

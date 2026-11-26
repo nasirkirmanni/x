@@ -33,7 +33,9 @@ The `<title>` and `og:site_name` in `index.html` also say Aezmo, so search engin
 
 ## Connect the form
 
-Set `formEndpoint` in `site.config.js` to a form service address, for example Formspree or Web3Forms. Until then the form runs in **preview mode**: it validates, shows the confirmation, says plainly that nothing was sent, and sends nothing.
+The form sends to Formspree, to the form "Aezmo applications". Its address is `formEndpoint` in `site.config.js`. Each application, from a creator or a brand, is emailed to the inbox on the Formspree account and kept in the Formspree dashboard. Spam is caught by a hidden trap field on the page and by Formspree's Formshield filter; Formspree's CAPTCHA is off, because the form sends in the background and can't show one.
+
+If `formEndpoint` is ever emptied, the form falls back to **preview mode**: it validates, shows the confirmation, says plainly that nothing was sent, and sends nothing.
 
 ## The Work section (a wall of posts)
 
@@ -67,7 +69,7 @@ Rules worth keeping:
 - [ ] The final logo. The current mark is a placeholder; have the final one checked against existing trademarks.
 - [ ] Tested on a real iPhone, an Android phone, Safari and Firefox
 - [x] Hosting (Vercel, 16 Nov 2026)
-- [ ] Your own domain, added in Vercel
+- [x] Your own domain: aezmo.com
 
 ## What the site does without JavaScript
 
