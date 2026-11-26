@@ -1069,7 +1069,8 @@
   function applyForm() {
     const form = $('[data-form]');
     if (!form) return;
-    const tabs = $$('.seg__btn', form);
+    const card = form.closest('[data-booking]') || document;
+    const tabs = $$('.seg__btn', card);
     const sets = $$('[data-set]', form);
     const kindInput = $('[data-kind-input]', form);
     const submitLabel = $('[data-submit-label]', form);
@@ -1077,7 +1078,51 @@
     const done = $('[data-form-done]');
     const demo = $('[data-form-demo]');
     const submit = $('button[type="submit"]', form);
-    const labels = { creator: 'Book a call', brand: 'Book a call' };
+    const labels = { creator: 'Request a call', brand: 'Request a call' };
+
+    // Booking calendar: Cal.com's inline embed, loaded only once the section is near,
+    // so visitors who never reach it don't load anything from Cal.com.
+    const booker = $('[data-booker]', card);
+    const fallback = $('[data-cal-fallback]', card);
+    const calLoaded = {};
+    let current = 'creator';
+    let calWanted = false;
+    const loadCal = (kind) => {
+      const box = $('[data-cal="' + kind + '"]', card);
+      if (!box || !calWanted || calLoaded[kind]) return;
+      calLoaded[kind] = true;
+      if (!window.Cal) {
+        // Cal.com's official loader snippet.
+        (function (C, A, L) { const p = function (a, ar) { a.q.push(ar); }; const d = C.document; C.Cal = C.Cal || function () { const cal = C.Cal; const ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement('script')).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if (typeof namespace === 'string') { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ['initNamespace', namespace]); } else p(cal, ar); return; } p(cal, ar); }; })(window, 'https://app.cal.com/embed/embed.js', 'init');
+      }
+      const ns = 'aezmo-' + kind;
+      window.Cal('init', ns, { origin: 'https://app.cal.com' });
+      window.Cal.ns[ns]('inline', { elementOrSelector: box, config: { layout: 'month_view', useSlotsViewOnSmallScreen: 'true', theme: 'dark' }, calLink: box.dataset.calLink });
+      window.Cal.ns[ns]('ui', { theme: 'dark', hideEventTypeDetails: false, layout: 'month_view' });
+      setTimeout(() => { if (fallback && !box.querySelector('iframe') && !box.hidden) fallback.hidden = false; }, 12000);
+    };
+    if (booker) {
+      const io = new IntersectionObserver((entries) => {
+        if (!entries.some((en) => en.isIntersecting)) return;
+        io.disconnect();
+        calWanted = true;
+        loadCal(current);
+      }, { rootMargin: '900px 0px' });
+      io.observe(booker);
+      const toForm = $('[data-show-form]', card);
+      const toCal = $('[data-show-cal]', card);
+      if (toForm) toForm.addEventListener('click', () => {
+        booker.hidden = true;
+        form.hidden = false;
+        const first = $('fieldset[data-set]:not([disabled]) input:not([type="hidden"])', form);
+        if (first) first.focus();
+      });
+      if (toCal) toCal.addEventListener('click', () => {
+        form.hidden = true;
+        booker.hidden = false;
+        loadCal(current);
+      });
+    }
 
     const setKind = (kind, focus) => {
       tabs.forEach((tab) => {
@@ -1094,6 +1139,10 @@
       });
       kindInput.value = kind;
       submitLabel.textContent = labels[kind] || labels.creator;
+      current = kind;
+      $$('[data-cal]', card).forEach((box) => { box.hidden = box.dataset.cal !== kind; });
+      if (fallback) fallback.hidden = true;
+      loadCal(kind);
       alertBox.hidden = true;
     };
 

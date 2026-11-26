@@ -489,19 +489,29 @@
 
         <div class="apply__head">
           <h2 class="display h2 apply__title" data-split data-reveal>If the industry reads you first, <em>we should talk.</em></h2>
-          <p class="lead" data-reveal style="--d:120ms">A person reads every request and replies to set a time.</p>
+          <p class="lead" data-reveal style="--d:120ms">Pick a time that suits you. Every call is with a person, not a script.</p>
           <ul class="contact" data-reveal hidden data-if="contact">
             <li hidden data-if="email"><span class="tag">Email</span><a class="link" data-site="email" href="#"></a></li>
             <li hidden data-if="x"><span class="tag">On X</span><a class="link" data-site="x" href="#" rel="noopener"></a></li>
           </ul>
         </div>
 
-        <div class="formcard" data-reveal style="--d:160ms">
-          <form class="form" data-form novalidate>
-            <div class="seg" role="tablist" aria-label="I am booking as">
-              <button class="seg__btn is-on" type="button" role="tab" id="tab-creator" aria-selected="true" aria-controls="panel-creator" data-kind="creator">I'm a creator</button>
-              <button class="seg__btn" type="button" role="tab" id="tab-brand" aria-selected="false" aria-controls="panel-brand" data-kind="brand" tabindex="-1">I'm a brand</button>
-            </div>
+        <div class="formcard" data-reveal style="--d:160ms" data-booking>
+          <div class="seg" role="tablist" aria-label="I am booking as">
+            <button class="seg__btn is-on" type="button" role="tab" id="tab-creator" aria-selected="true" data-kind="creator">I'm a creator</button>
+            <button class="seg__btn" type="button" role="tab" id="tab-brand" aria-selected="false" data-kind="brand" tabindex="-1">I'm a brand</button>
+          </div>
+
+          <!-- The booking calendar: Cal.com's inline embed, loaded by main.js when this section is near. -->
+          <div class="booker" data-booker>
+            <div class="booker__cal" data-cal="creator" data-cal-link="aezmo/intro-call"></div>
+            <div class="booker__cal" data-cal="brand" data-cal-link="aezmo/partnership-call" hidden></div>
+            <p class="booker__msg" data-cal-fallback hidden>The calendar did not load. <a href="https://cal.com/aezmo" target="_blank" rel="noopener">Book on Cal.com instead</a></p>
+            <noscript><p class="booker__msg">Book a call at <a href="https://cal.com/aezmo">cal.com/aezmo</a>.</p></noscript>
+            <p class="booker__alt">Prefer to write first? <button class="booker__switch" type="button" data-show-form>Send us a note</button></p>
+          </div>
+
+          <form class="form" data-form novalidate hidden>
             <input type="hidden" name="type" value="creator" data-kind-input>
             <div class="hp" aria-hidden="true"><label>Leave this empty <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"></label></div>
 
@@ -546,9 +556,10 @@
 
             <div class="form__end">
               <p class="form__note">Fields marked * are required. We use what you send only to reply to you. <a href="/privacy">How we handle your data</a></p>
-              <button class="btn" type="submit" data-magnetic><span class="btn__label" data-submit-label>Book a call</span><svg class="btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+              <button class="btn" type="submit" data-magnetic><span class="btn__label" data-submit-label>Request a call</span><svg class="btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
             </div>
             <p class="form__alert" role="alert" data-form-alert hidden></p>
+            <p class="booker__alt">Rather pick a time now? <button class="booker__switch" type="button" data-show-cal>Back to the calendar</button></p>
           </form>
 
           <div class="form__done" data-form-done hidden tabindex="-1" role="status">
@@ -560,8 +571,8 @@
         </div>
 
         <ol class="next" data-reveal style="--d:200ms">
-          <li><span class="tag">01</span><p>We read your request and look at your work.</p></li>
-          <li><span class="tag">02</span><p>We reply by email to set a time that suits you.</p></li>
+          <li><span class="tag">01</span><p>Pick a time and the calendar invite arrives straight away.</p></li>
+          <li><span class="tag">02</span><p>We look at your work before we talk.</p></li>
           <li><span class="tag">03</span><p>If we both want to go ahead after the call, you receive our terms in writing.</p></li>
         </ol>
       </div>

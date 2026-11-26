@@ -1112,3 +1112,21 @@ html:not(.js) .flow__art:not([data-art="3"]) { display: none; }
 }
 .privacy__sec a:hover, .form__note a:hover, .foot__legal a:hover { color: var(--white); text-decoration-color: currentColor; }
 .privacy-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 2rem; padding-block: 1.5rem 2.5rem; border-top: 1px solid var(--line); font-size: var(--fs-small); color: var(--dim); }
+
+/* ---------- Booking calendar (Cal.com inline embed) ---------- */
+.booker { display: grid; gap: 1.5rem; }
+.booker__cal { position: relative; min-height: 30rem; border-radius: 1rem; overflow: hidden; }
+.booker__cal:empty::before {
+  content: "Loading the calendar\2026"; position: absolute; inset: 0; display: grid; place-items: center;
+  font-size: var(--fs-small); color: var(--dim);
+}
+/* The page is dark and Cal.com's frame is not; matching schemes keeps the frame's
+   background transparent instead of a white strip under the calendar. */
+.booker__cal iframe { display: block; width: 100% !important; color-scheme: light !important; }
+.booker__msg, .booker__alt { font-size: var(--fs-small); color: var(--dim); text-align: center; }
+.form .booker__alt { margin-top: 1.75rem; }
+.booker__msg a, .booker__switch {
+  color: var(--paper); text-decoration: underline; text-decoration-color: var(--line-3);
+  text-decoration-thickness: 1px; text-underline-offset: .22em; transition: color var(--t-fast), text-decoration-color var(--t-fast);
+}
+.booker__msg a:hover, .booker__switch:hover { color: var(--white); text-decoration-color: currentColor; }
