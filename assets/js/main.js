@@ -394,6 +394,26 @@
     });
   }
 
+  /* ---------- The line under the hero: the light moves from Hollywood to X ----------
+     "Hollywood has its agents." starts lit. Once the line is past 70% of the screen's
+     height, the light runs off the end of that sentence and along "X has Aezmo.", which
+     stays lit (the timing is in the CSS). It goes back only when the line is scrolled down
+     to the bottom tenth of the screen again, so it plays once each time you arrive. */
+  function interlude() {
+    const el = $('[data-interlude]');
+    if (!el || reduced()) return;
+    const line = $('.interlude__line', el);
+    el.classList.add('is-live');
+    const update = (y, vh) => {
+      const r = line.getBoundingClientRect();
+      const mid = r.top + r.height / 2;
+      if (mid < vh * 0.7) el.classList.add('is-on');
+      else if (mid > vh * 0.9) el.classList.remove('is-on');
+    };
+    scrollFns.push(update);
+    update(window.scrollY, window.innerHeight);
+  }
+
   /* ---------- Hero figure: a field of hyperbolas whose asymptotes draw the X ----------
      Every strand is one curve of the family x² − y² = c. Far from the centre the
      strands close in on the two diagonals, so the X appears on its own. Near the
@@ -1259,6 +1279,7 @@
   wall();
   splitHeadlines();
   statement();
+  interlude();
   reveals();
   navigation();
   menu();
