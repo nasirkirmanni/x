@@ -62,7 +62,7 @@ Rules worth keeping:
 - [x] Agency name: Aezmo
 - [ ] Legal name for the footer, once the company is registered (until then it shows "Aezmo")
 - [ ] Contact email and X handle in `site.config.js`
-- [ ] Form connected and tested with a real submission
+- [x] Form connected to Formspree and tested (the test landed in Formspree's Spam folder; check it now and then)
 - [ ] A privacy notice page, linked near the form. The form collects personal data.
 - [x] Commercial terms in the Questions section confirmed (16 Nov 2026): commission-based pay and exclusive representation
 - [ ] A share image (`og:image`) for social previews
