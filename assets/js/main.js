@@ -48,7 +48,7 @@
     root.classList.toggle('has-name', !!name);
     $$('[data-site="name"]').forEach((el) => { el.textContent = name; });
     $$('[data-site="legal"]').forEach((el) => { el.textContent = legal ? legal + '.' : ''; });
-    if (name) document.title = name + ' · ' + document.title;
+    if (name && !document.title.startsWith(name)) document.title = name + ' · ' + document.title;
 
     if (email) {
       $$('[data-site="email"]').forEach((a) => { a.textContent = email; a.href = 'mailto:' + email; });

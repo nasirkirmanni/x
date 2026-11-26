@@ -11,7 +11,7 @@
  *              mode and sends nothing.
  */
 window.SITE = {
-  name: "",
+  name: "Aezmo",
   legalName: "",
   email: "",
   xHandle: "",

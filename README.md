@@ -27,9 +27,9 @@ Double-click `index.html`, or serve the folder with any static server. Fonts loa
 
 ## Set the name
 
-Open `assets/js/site.config.js` and fill in `name`. It then appears in the header, the footer and the browser tab. While it is empty, the header shows the mark and "Tech & Fintech Creators".
+The name is **Aezmo**, set as `name` in `assets/js/site.config.js`. From there it appears in the header, the footer and the browser tab. If `name` is empty, the header shows the mark and "Tech & Fintech Creators" instead.
 
-The text used when the site is shared on social media is in the `<head>` of `index.html` (`og:title`, `og:description`). Update it by hand once the name is final.
+The `<title>` and `og:site_name` in `index.html` also say Aezmo, so search engines and link previews see the name without running JavaScript. Change them too if the name ever changes. The rest of the text used when the site is shared is in `og:title` and `og:description`.
 
 ## Connect the form
 
@@ -57,7 +57,8 @@ Rules worth keeping:
 
 ## Before launch
 
-- [ ] Agency name, and legal name for the footer
+- [x] Agency name: Aezmo
+- [ ] Legal name for the footer, once the company is registered (until then it shows "Aezmo")
 - [ ] Contact email and X handle in `site.config.js`
 - [ ] Form connected and tested with a real submission
 - [ ] A privacy notice page, linked near the form. The form collects personal data.
