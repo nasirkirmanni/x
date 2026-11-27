@@ -1,20 +1,23 @@
 {
   "cleanUrls": true,
+  "crons": [
+    { "path": "/api/cal-tomorrow", "schedule": "0 17 * * *" }
+  ],
   "redirects": [
     {
-      "source": "/(.*)",
+      "source": "/((?!api/).*)",
       "has": [{ "type": "host", "value": "www.aezmo.com" }],
       "destination": "https://aezmo.com/$1",
       "permanent": true
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!api/).*)",
       "has": [{ "type": "host", "value": "tech-fintech-creators.vercel.app" }],
       "destination": "https://aezmo.com/$1",
       "permanent": true
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!api/).*)",
       "has": [{ "type": "host", "value": "ai-creator-management.vercel.app" }],
       "destination": "https://aezmo.com/$1",
       "permanent": true

@@ -24,6 +24,8 @@ Double-click `index.html`, or serve the folder with any static server. Fonts loa
 | `assets/js/site.config.js` | **The agency name, contact details and form address.** |
 | `assets/js/posts.js` | **The posts shown in the Work section.** Empty for now, so that section is hidden. |
 | `assets/img/favicon.svg` | Browser-tab icon (the placeholder mark). |
+| `api/cal-tomorrow.js` | The nightly Cal.com job (see "Booking rules" below). |
+| `vercel.json` | Clean URLs, the redirects to aezmo.com, and the nightly job's schedule. |
 
 ## Set the name
 
@@ -36,6 +38,18 @@ The `<title>` and `og:site_name` in `index.html` also say Aezmo, so search engin
 The form sends to Formspree, to the form "Aezmo applications". Its address is `formEndpoint` in `site.config.js`. Each call request, from a creator or a brand, is emailed to the inbox on the Formspree account and kept in the Formspree dashboard. Spam is caught by a hidden trap field on the page and by Formspree's Formshield filter; Formspree's CAPTCHA is off, because the form sends in the background and can't show one.
 
 If `formEndpoint` is ever emptied, the form falls back to **preview mode**: it validates, shows the confirmation, says plainly that nothing was sent, and sends nothing.
+
+## Booking rules (Cal.com)
+
+The calendar in "Book a call" is Cal.com (`aezmo/intro-call` and `aezmo/partnership-call`). Bookings follow these rules, in India time:
+
+- **Today:** nothing. Both links have a 24-hour minimum notice in Cal.com.
+- **Tomorrow:** one slot only, at 10:00 PM.
+- **Every later day:** the normal weekly hours. Sunday is always off.
+
+Cal.com has no setting for "tomorrow only", so `api/cal-tomorrow.js` does it. Vercel runs it every night between 10:30 and 11:30 PM India time (`crons` in `vercel.json`). It gives the next day a Cal.com date override of 10:00 to 10:30 PM, using the Cal.com API with the key in the Vercel environment variable `CAL_API_KEY`. It never touches a date that already has an override of your own (a day off, other hours), and it skips Sundays. Opening https://aezmo.com/api/cal-tomorrow runs it by hand; running it twice changes nothing. Its log is in Vercel under the project's Logs.
+
+If the calls ever stop being 30 minutes long, change `SLOT` in `api/cal-tomorrow.js` so the window still holds exactly one call.
 
 ## The Work section (a wall of posts)
 
